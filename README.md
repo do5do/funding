@@ -56,3 +56,4 @@
 - Spring data JPA
 - MySQL database
 - Redis
+- AWS S3
