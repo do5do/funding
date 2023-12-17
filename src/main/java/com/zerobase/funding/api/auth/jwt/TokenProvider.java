@@ -73,7 +73,8 @@ public class TokenProvider {
 
     public String reissueAccessToken(String accessToken) {
         if (StringUtils.hasText(accessToken)) {
-            String refreshToken = refreshTokenService.findByAccessTokenOrThrow(accessToken);
+            String refreshToken = refreshTokenService.findByAccessTokenOrThrow(accessToken)
+                    .getRefreshToken();
 
             if (validateToken(refreshToken)) {
                 return generateAccessToken(getAuthentication(refreshToken));

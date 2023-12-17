@@ -1,4 +1,6 @@
 package com.zerobase.funding.api.auth.dto;
 
-public record LoginResponse(String accessToken) {
+import jakarta.validation.constraints.NotBlank;
+
+public record LoginResponse(@NotBlank String accessToken) {
 }

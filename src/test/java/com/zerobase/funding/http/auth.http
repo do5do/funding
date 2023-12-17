@@ -1,0 +1,3 @@
+### logout
+DELETE {{host}}/auth/logout
+Authorization: Bearer {{token}}

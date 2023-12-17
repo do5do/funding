@@ -20,8 +20,18 @@ public class RefreshTokenService {
     }
 
     @Transactional(readOnly = true)
-    public String findByAccessTokenOrThrow(String accessToken) {
+    public RefreshToken findByAccessTokenOrThrow(String accessToken) {
         return refreshTokenRepository.findByAccessToken(accessToken)
-                .orElseThrow(() -> new AuthException(TOKEN_NOT_FOUND)).getRefreshToken();
+                .orElseThrow(() -> new AuthException(TOKEN_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public RefreshToken findByIdOrThrow(String memberKey) {
+        return refreshTokenRepository.findById(memberKey)
+                .orElseThrow(() -> new AuthException(TOKEN_NOT_FOUND));
+    }
+
+    public void deleteRefreshToken(RefreshToken refreshToken) {
+        refreshTokenRepository.delete(refreshToken);
     }
 }
