@@ -31,11 +31,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = tokenProvider.getAuthentication(accessToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
-            String accessTokenRefresh = tokenProvider.reissueAccessToken(accessToken);
+            String reissueAccessToken = tokenProvider.reissueAccessToken(accessToken);
 
-            if (StringUtils.hasText(accessTokenRefresh)) {
-                Authentication authentication = tokenProvider.getAuthentication(accessTokenRefresh);
+            if (StringUtils.hasText(reissueAccessToken)) {
+                Authentication authentication = tokenProvider.getAuthentication(reissueAccessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                response.setHeader(AUTHORIZATION, Token.TOKEN_PREFIX + reissueAccessToken);
             }
         }
 
