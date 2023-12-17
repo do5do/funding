@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         Map<String, Object> oAuth2UserAttributes = super.loadUser(userRequest).getAttributes();
@@ -34,7 +36,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private Member getOrSave(OAuth2UserDto oAuth2UserDto) {
-        return memberRepository.findByEmail(oAuth2UserDto.getEmail())
-                .orElse(memberRepository.save(oAuth2UserDto.toEntity()));
+        Member member = memberRepository.findByEmail(oAuth2UserDto.getEmail())
+                .orElse(oAuth2UserDto.toEntity());
+        return memberRepository.save(member);
     }
 }
