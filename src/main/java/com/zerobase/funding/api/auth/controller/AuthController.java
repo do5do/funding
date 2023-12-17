@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 public class AuthController {
+
     private final RefreshTokenService refreshTokenService;
 
     @GetMapping("/auth/success")
@@ -26,7 +27,7 @@ public class AuthController {
     }
 
     @DeleteMapping("/auth/logout")
-    public ResponseEntity<?> logout(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<LogoutResponse> logout(@AuthenticationPrincipal UserDetails userDetails) {
         String memberKey = userDetails.getUsername();
         try {
             refreshTokenService.deleteRefreshToken(refreshTokenService.findByIdOrThrow(memberKey));
