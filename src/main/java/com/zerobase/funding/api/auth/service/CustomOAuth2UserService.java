@@ -1,6 +1,6 @@
 package com.zerobase.funding.api.auth.service;
 
-import com.zerobase.funding.api.auth.dto.OAuth2UserDto;
+import com.zerobase.funding.api.auth.dto.OAuth2UserInfo;
 import com.zerobase.funding.api.auth.dto.model.PrincipalDetails;
 import com.zerobase.funding.domain.member.entity.Member;
 import com.zerobase.funding.domain.member.repository.MemberRepository;
@@ -29,15 +29,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint().getUserNameAttributeName();
 
-        OAuth2UserDto oAuth2UserDto = OAuth2UserDto.of(registrationId, oAuth2UserAttributes);
-        Member member = getOrSave(oAuth2UserDto);
+        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfo.of(registrationId, oAuth2UserAttributes);
+        Member member = getOrSave(oAuth2UserInfo);
 
         return new PrincipalDetails(member, oAuth2UserAttributes, userNameAttributeName);
     }
 
-    private Member getOrSave(OAuth2UserDto oAuth2UserDto) {
-        Member member = memberRepository.findByEmail(oAuth2UserDto.getEmail())
-                .orElse(oAuth2UserDto.toEntity());
+    private Member getOrSave(OAuth2UserInfo oAuth2UserInfo) {
+        Member member = memberRepository.findByEmail(oAuth2UserInfo.getEmail())
+                .orElse(oAuth2UserInfo.toEntity());
         return memberRepository.save(member);
     }
 }
