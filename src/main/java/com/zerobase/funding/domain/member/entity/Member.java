@@ -43,13 +43,15 @@ public class Member extends BaseTimeEntity {
     private Address address;
 
     @Builder
-    public Member(String name, String email, String profile, String memberKey, Role role,
-            Address address) {
+    public Member(String name, String email, String profile, String memberKey, Role role) {
         this.name = name;
         this.email = email;
         this.profile = profile;
         this.memberKey = memberKey;
         this.role = role;
+    }
+
+    public void setAddress(Address address) {
         this.address = address;
     }
 }
