@@ -37,7 +37,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 Authentication authentication = tokenProvider.getAuthentication(reissueAccessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                response.setHeader(AUTHORIZATION, Token.TOKEN_PREFIX + reissueAccessToken);
+                response.setHeader(AUTHORIZATION, reissueAccessToken);
             }
         }
 
