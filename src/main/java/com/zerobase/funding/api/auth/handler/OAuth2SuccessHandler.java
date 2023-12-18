@@ -1,7 +1,6 @@
 package com.zerobase.funding.api.auth.handler;
 
 import com.zerobase.funding.api.auth.jwt.TokenProvider;
-import com.zerobase.funding.global.constants.Token;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,7 +27,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         tokenProvider.generateRefreshToken(authentication, accessToken);
 
         String redirectUrl = UriComponentsBuilder.fromUriString(URI)
-                .queryParam("accessToken", Token.TOKEN_PREFIX + accessToken)
+                .queryParam("accessToken", accessToken)
                 .build().toUriString();
 
         response.sendRedirect(redirectUrl);

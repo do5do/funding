@@ -21,13 +21,13 @@ public record PrincipalDetails(Member member,
 
     @Override
     public Map<String, Object> getAttributes() {
-        return attributes();
+        return attributes;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(
-                new SimpleGrantedAuthority(member().getRole().getKey()));
+                new SimpleGrantedAuthority(member.getRole().getKey()));
     }
 
     @Override
@@ -37,7 +37,7 @@ public record PrincipalDetails(Member member,
 
     @Override
     public String getUsername() {
-        return member().getMemberKey();
+        return member.getMemberKey();
     }
 
     @Override
