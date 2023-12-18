@@ -6,9 +6,11 @@ import com.zerobase.funding.api.auth.exception.AuthException;
 import com.zerobase.funding.domain.redis.entity.RefreshToken;
 import com.zerobase.funding.domain.redis.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class RefreshTokenService {
@@ -25,13 +27,8 @@ public class RefreshTokenService {
                 .orElseThrow(() -> new AuthException(TOKEN_NOT_FOUND));
     }
 
-    @Transactional(readOnly = true)
-    public RefreshToken findByIdOrThrow(String memberKey) {
-        return refreshTokenRepository.findById(memberKey)
-                .orElseThrow(() -> new AuthException(TOKEN_NOT_FOUND));
-    }
-
-    public void deleteRefreshToken(RefreshToken refreshToken) {
-        refreshTokenRepository.delete(refreshToken);
+    public String deleteRefreshToken(String memberKey) {
+        refreshTokenRepository.deleteById(memberKey);
+        return memberKey;
     }
 }

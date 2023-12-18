@@ -2,7 +2,6 @@ package com.zerobase.funding.api.auth.controller;
 
 import com.zerobase.funding.api.auth.dto.LoginResponse;
 import com.zerobase.funding.api.auth.dto.LogoutResponse;
-import com.zerobase.funding.api.auth.exception.AuthException;
 import com.zerobase.funding.api.auth.service.RefreshTokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +27,7 @@ public class AuthController {
 
     @DeleteMapping("/auth/logout")
     public ResponseEntity<LogoutResponse> logout(@AuthenticationPrincipal UserDetails userDetails) {
-        String memberKey = userDetails.getUsername();
-        try {
-            refreshTokenService.deleteRefreshToken(refreshTokenService.findByIdOrThrow(memberKey));
-        } catch (AuthException e) {
-            log.error("해당 유저[{}]에 대한 삭제할 토큰이 없습니다.", memberKey);
-        }
-        return ResponseEntity.ok(new LogoutResponse(memberKey));
+        return ResponseEntity.ok(new LogoutResponse(
+                refreshTokenService.deleteRefreshToken(userDetails.getUsername())));
     }
 }
