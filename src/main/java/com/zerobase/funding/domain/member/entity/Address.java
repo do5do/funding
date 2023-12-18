@@ -12,13 +12,11 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class Address {
 
-    @Column(nullable = false)
     private String roadAddress;
 
-    @Column(nullable = false)
     private String addressDetail;
 
-    @Column(nullable = false, length = 10)
+    @Column(length = 10)
     private String zipcode;
 
     @Builder

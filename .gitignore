@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+src/main/resources/application-oauth.yml
+src/main/resources/application-key.yml
+/src/test/java/com/zerobase/funding/http/http-client.private.env.json
