@@ -1,5 +1,6 @@
 package com.zerobase.funding.domain.member.entity;
 
+import com.zerobase.funding.api.member.dto.MemberEditRequest;
 import com.zerobase.funding.domain.common.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -51,7 +52,15 @@ public class Member extends BaseTimeEntity {
         this.role = role;
     }
 
-    public void setAddress(Address address) {
+    public void addAddress(Address address) {
         this.address = address;
+    }
+
+    public void updateMember(MemberEditRequest request) {
+        this.name = request.name();
+
+        if (request.address() != null) {
+            this.address = request.address().toEntity();
+        }
     }
 }

@@ -1,0 +1,12 @@
+### get member info
+GET {{host}}/members
+Authorization: {{token}}
+
+### update member info
+PATCH {{host}}/members
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "name": "dohee"
+}
