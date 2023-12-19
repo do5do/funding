@@ -1,4 +1,4 @@
-package com.zerobase.funding.domain.product.entity;
+package com.zerobase.funding.domain.fundingproduct.entity;
 
 import com.zerobase.funding.domain.common.entity.BaseTimeEntity;
 import jakarta.persistence.Column;
@@ -32,15 +32,15 @@ public class Image extends BaseTimeEntity {
     private String url;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "funding_product_id")
+    private FundingProduct fundingProduct;
 
     public Image(ImageType imageType, String url) {
         this.imageType = imageType;
         this.url = url;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setFundingProduct(FundingProduct fundingProduct) {
+        this.fundingProduct = fundingProduct;
     }
 }

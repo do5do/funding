@@ -1,4 +1,4 @@
-package com.zerobase.funding.domain.product.entity;
+package com.zerobase.funding.domain.fundingproduct.entity;
 
 import com.zerobase.funding.domain.common.entity.BaseTimeEntity;
 import com.zerobase.funding.domain.member.entity.Member;
@@ -25,7 +25,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Product extends BaseTimeEntity {
+public class FundingProduct extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,14 +54,14 @@ public class Product extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "fundingProduct", cascade = CascadeType.ALL)
     private List<Reward> rewards = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "fundingProduct", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
     @Builder
-    public Product(String title, String description, LocalDate startDate, LocalDate endDate,
+    public FundingProduct(String title, String description, LocalDate startDate, LocalDate endDate,
             Integer targetAmount, Integer views) {
         this.title = title;
         this.description = description;
@@ -73,11 +73,11 @@ public class Product extends BaseTimeEntity {
 
     public void addRewards(Reward reward) {
         rewards.add(reward);
-        reward.setProduct(this);
+        reward.setFundingProduct(this);
     }
 
     public void addImages(Image image) {
         images.add(image);
-        image.setProduct(this);
+        image.setFundingProduct(this);
     }
 }
