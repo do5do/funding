@@ -1,0 +1,2 @@
+### get fundingProducts (permitAll)
+GET {{host}}/funding-products?filterType=IN_PROGRESS&page=0&size=5
