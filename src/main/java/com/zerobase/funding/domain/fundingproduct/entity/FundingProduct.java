@@ -71,6 +71,10 @@ public class FundingProduct extends BaseTimeEntity {
         this.views = views;
     }
 
+    public void addMember(Member member) {
+        this.member = member;
+    }
+
     public void addRewards(Reward reward) {
         rewards.add(reward);
         reward.setFundingProduct(this);
