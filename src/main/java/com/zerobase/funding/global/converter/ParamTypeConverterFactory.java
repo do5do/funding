@@ -13,6 +13,7 @@ public class ParamTypeConverterFactory implements ConverterFactory<String, Enum>
 
     @RequiredArgsConstructor
     public static class ParamTypeConverter<T extends Enum> implements Converter<String, T> {
+
         private final Class<T> enumType;
 
         @Override
