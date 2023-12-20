@@ -1,17 +1,16 @@
 package com.zerobase.funding.api.config;
 
-import com.zerobase.funding.api.fundingproduct.converter.FilterTypeConverter;
+import com.zerobase.funding.global.converter.ParamTypeConverterFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@EnableWebMvc
+//@EnableWebMvc
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new FilterTypeConverter());
+        registry.addConverterFactory(new ParamTypeConverterFactory());
     }
 }

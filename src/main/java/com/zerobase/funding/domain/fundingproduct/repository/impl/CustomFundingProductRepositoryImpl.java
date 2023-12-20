@@ -2,16 +2,15 @@ package com.zerobase.funding.domain.fundingproduct.repository.impl;
 
 import static com.zerobase.funding.domain.fundingproduct.entity.QFundingProduct.fundingProduct;
 
-import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.zerobase.funding.api.fundingproduct.dto.SearchCondition;
 import com.zerobase.funding.api.fundingproduct.type.FilterType;
+import com.zerobase.funding.api.fundingproduct.type.SortType;
 import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
 import com.zerobase.funding.domain.fundingproduct.repository.CustomFundingProductRepository;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -24,11 +23,12 @@ public class CustomFundingProductRepositoryImpl implements CustomFundingProductR
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Slice<FundingProduct> findFundingProducts(Pageable pageable, FilterType filterType) {
+    public Slice<FundingProduct> findFundingProducts(Pageable pageable,
+            SearchCondition searchCondition) {
         List<FundingProduct> contents = queryFactory
                 .selectFrom(fundingProduct)
-                .where(filtering(filterType))
-                .orderBy(getOrderSpecifier(pageable))
+                .where(filtering(searchCondition.filterType()))
+                .orderBy(ordering(searchCondition.sortType()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
                 .fetch();
@@ -42,24 +42,15 @@ public class CustomFundingProductRepositoryImpl implements CustomFundingProductR
         return new SliceImpl<>(contents, pageable, hasNext);
     }
 
-    private OrderSpecifier[] getOrderSpecifier(Pageable pageable) {
-        List<OrderSpecifier> orderSpecifiers = new ArrayList<>();
-
-        if (!pageable.getSort().isEmpty()) {
-            pageable.getSort().forEach(order -> {
-                Order direction = order.isAscending() ? Order.ASC : Order.DESC;
-                String property = order.getProperty();
-                PathBuilder pathBuilder = new PathBuilder<>(
-                        FundingProduct.class, "fundingProduct");
-                orderSpecifiers.add(new OrderSpecifier<>(direction, pathBuilder.get(property)));
-            });
+    private OrderSpecifier<?> ordering(SortType sortType) {
+        if (SortType.VIEWS.equals(sortType)) {
+            return fundingProduct.views.desc();
         }
-
-        return orderSpecifiers.toArray(new OrderSpecifier[0]);
+        return fundingProduct.id.desc();
     }
 
     private BooleanExpression filtering(FilterType filterType) {
-        if (filterType.equals(FilterType.UPCOMING)) {
+        if (FilterType.UPCOMING.equals(filterType)) {
             return fundingProduct.startDate.after(LocalDate.now());
         }
 
