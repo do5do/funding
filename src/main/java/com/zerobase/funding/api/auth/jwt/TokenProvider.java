@@ -42,7 +42,7 @@ public class TokenProvider {
 
     public void generateRefreshToken(Authentication authentication) {
         String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
-        refreshTokenService.saveRefreshToken(authentication.getName(), refreshToken);
+        refreshTokenService.saveOrUpdate(authentication.getName(), refreshToken);
     }
 
     private String generateToken(Authentication authentication, long expireTime) {
@@ -73,18 +73,14 @@ public class TokenProvider {
 
     public String reissueAccessToken(String accessToken) {
         if (StringUtils.hasText(accessToken)) {
-            String refreshToken = findRefreshToken(accessToken);
+            String memberKey = parseClaims(accessToken).getSubject();
+            String refreshToken = refreshTokenService.findByIdOrNull(memberKey);
 
             if (validateToken(refreshToken)) {
                 return generateAccessToken(getAuthentication(refreshToken));
             }
         }
         return null;
-    }
-
-    public String findRefreshToken(String accessToken) {
-        String memberKey = parseClaims(accessToken).getSubject();
-        return refreshTokenService.findByIdOrNull(memberKey);
     }
 
     public boolean validateToken(String token) {

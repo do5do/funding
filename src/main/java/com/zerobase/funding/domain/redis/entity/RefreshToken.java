@@ -14,4 +14,9 @@ public class RefreshToken {
     private String id;
 
     private String refreshToken;
+
+    public RefreshToken update(String refreshToken) {
+        this.refreshToken = refreshToken;
+        return this;
+    }
 }

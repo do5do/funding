@@ -15,10 +15,6 @@ public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public void saveRefreshToken(String memberKey, String refreshToken) {
-        refreshTokenRepository.save(new RefreshToken(memberKey, refreshToken));
-    }
-
     @Transactional(readOnly = true)
     public String findByIdOrNull(String memberKey) {
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findById(memberKey);
@@ -28,5 +24,14 @@ public class RefreshTokenService {
     public String deleteRefreshToken(String memberKey) {
         refreshTokenRepository.deleteById(memberKey);
         return memberKey;
+    }
+
+    @Transactional
+    public void saveOrUpdate(String memberKey, String refreshToken) {
+        RefreshToken token = refreshTokenRepository.findById(memberKey)
+                .map(o -> o.update(refreshToken))
+                .orElseGet(() -> new RefreshToken(memberKey, refreshToken));
+
+        refreshTokenRepository.save(token);
     }
 }
