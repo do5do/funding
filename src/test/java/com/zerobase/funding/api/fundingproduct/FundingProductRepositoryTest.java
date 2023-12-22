@@ -45,9 +45,9 @@ public class FundingProductRepositoryTest {
                     .startDate(LocalDate.now().plusDays(i - 1))
                     .endDate(LocalDate.now().plusDays(30))
                     .targetAmount(10000)
-                    .views(i)
                     .build();
             fundingProduct.addMember(member);
+            fundingProduct.updateViews(i);
 
             fundingProductRepository.save(fundingProduct);
         }

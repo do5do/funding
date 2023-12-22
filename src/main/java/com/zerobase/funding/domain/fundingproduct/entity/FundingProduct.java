@@ -46,7 +46,6 @@ public class FundingProduct extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer targetAmount;
 
-    @Column(nullable = false)
     @ColumnDefault("0")
     private Integer views;
 
@@ -62,13 +61,12 @@ public class FundingProduct extends BaseTimeEntity {
 
     @Builder
     public FundingProduct(String title, String description, LocalDate startDate, LocalDate endDate,
-            Integer targetAmount, Integer views) {
+            Integer targetAmount) {
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
         this.targetAmount = targetAmount;
-        this.views = views;
     }
 
     public void addMember(Member member) {
@@ -83,5 +81,10 @@ public class FundingProduct extends BaseTimeEntity {
     public void addImages(Image image) {
         images.add(image);
         image.setFundingProduct(this);
+    }
+
+    // todo redis에 저장되어 있는 뷰 수를 주기적으로 넣어줌
+    public void updateViews(Integer views) {
+        this.views = views;
     }
 }

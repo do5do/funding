@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    include: oauth, key, cloud
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/funding?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
@@ -8,7 +11,7 @@ spring:
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true
@@ -20,5 +23,9 @@ spring:
       port: 6379
       host: localhost
 
-  profiles:
-    include: oauth, key
+  servlet:
+    multipart:
+      file-size-threshold: 2MB
+      location: /tmp/s3
+      max-file-size: 2MB
+      max-request-size: 12MB

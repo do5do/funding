@@ -3,24 +3,20 @@ package com.zerobase.funding.api.fundingproduct.dto.model;
 import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
 import java.time.LocalDate;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class FundingProductDto {
-    private String title;
-    private String description;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private Integer targetAmount;
-    private Integer views;
-    private List<RewardDto> rewards;
-    private List<ImageDto> images;
+public record FundingProductDto(
+        String title,
+        String description,
+        LocalDate startDate,
+        LocalDate endDate,
+        Integer targetAmount,
+        Integer views,
+        List<RewardDto> rewards,
+        List<ImageDto> images
+) {
+
 
     public static FundingProductDto fromEntity(FundingProduct fundingProduct) {
         return FundingProductDto.builder()

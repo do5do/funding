@@ -1,2 +1,60 @@
 ### get fundingProducts (permitAll)
 GET {{host}}/funding-products?filterType=IN_PROGRESS&sortType=&page=0&size=5
+
+### fundingProduct registration
+POST {{host}}/funding-products
+Content-Type: multipart/form-data; boundary=registration
+Authorization: {{token}}
+
+--registration
+Content-Disposition: form-data; name="request"
+Content-Type: application/json
+
+{
+  "title": "나무를 닮은 칫솔,<TWIG 트위그>",
+  "description": "나무를 닮은 칫솔 TWIG(트위그), 지속 가능한 내일을 생각합니다.",
+  "startDate": "2023-12-08",
+  "endDate": "2024-01-08",
+  "targetAmount": 500000,
+  "rewards": [
+    {
+      "title": "슈퍼 얼리버드 FAMILY",
+      "description": "TWIG 칫솔 (x4)",
+      "price": 35000,
+      "stockQuantity": 100
+    },
+    {
+      "title": "얼리버드 COUPLE",
+      "description": "TWIG 칫솔 (x2)",
+      "price": 23000,
+      "stockQuantity": 100
+    },
+    {
+      "title": "얼리버드 SINGLE",
+      "description": "TWIG 칫솔 (x1)",
+      "price": 12000,
+      "stockQuantity": 100
+    }
+  ]
+}
+
+--registration
+Content-Disposition: form-data; name="thumbnail"; filename="thumbnail.webp"
+Content-Type: multipart/form-data
+
+< ./img/thumbnail.webp
+
+--registration
+Content-Disposition: form-data; name="details"; filename="java.png"
+Content-Type: multipart/form-data
+
+< ./img/java.png
+
+--registration
+Content-Disposition: form-data; name="details"; filename="jpa.png"
+Content-Type: multipart/form-data
+
+< ./img/jpa.png
+--registration
+
+###
