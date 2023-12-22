@@ -9,7 +9,7 @@ import com.zerobase.funding.domain.fundingproduct.entity.Image;
 import com.zerobase.funding.domain.fundingproduct.entity.ImageType;
 import com.zerobase.funding.domain.fundingproduct.repository.FundingProductRepository;
 import com.zerobase.funding.domain.member.entity.Member;
-import com.zerobase.funding.api.utils.s3.AwsS3Utils;
+import com.zerobase.funding.api.common.s3.AwsS3Service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FundingProductService {
 
     private final FundingProductRepository fundingProductRepository;
-    private final AwsS3Utils awsS3Utils;
+    private final AwsS3Service awsS3Service;
     private final AuthenticationService authenticationService;
 
     public Slice<FundingProductDto> fundingProducts(Pageable pageable,
@@ -38,8 +38,8 @@ public class FundingProductService {
             List<MultipartFile> details, String memberKey) {
         Member member = authenticationService.getMemberOrThrow(memberKey);
 
-        String thumbnailUrl = awsS3Utils.uploadFile(thumbnail);
-        List<String> detailUrls = awsS3Utils.uploadFiles(details);
+        String thumbnailUrl = awsS3Service.uploadFile(thumbnail);
+        List<String> detailUrls = awsS3Service.uploadFiles(details);
 
         FundingProduct fundingProduct = request.toEntity();
         fundingProduct.addMember(member);

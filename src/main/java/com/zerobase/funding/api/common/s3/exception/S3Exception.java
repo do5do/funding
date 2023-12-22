@@ -1,4 +1,4 @@
-package com.zerobase.funding.api.utils.s3.exception;
+package com.zerobase.funding.api.common.s3.exception;
 
 import com.zerobase.funding.global.exception.CustomException;
 import com.zerobase.funding.global.exception.ErrorCode;

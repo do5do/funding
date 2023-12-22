@@ -3,7 +3,7 @@ package com.zerobase.funding.api.auth.dto;
 import static com.zerobase.funding.global.exception.ErrorCode.ILLEGAL_REGISTRATION_ID;
 
 import com.zerobase.funding.api.auth.exception.AuthException;
-import com.zerobase.funding.api.utils.KeyGenerator;
+import com.zerobase.funding.api.common.utils.KeyGenerator;
 import com.zerobase.funding.domain.member.entity.Member;
 import com.zerobase.funding.domain.member.entity.Role;
 import java.util.Map;

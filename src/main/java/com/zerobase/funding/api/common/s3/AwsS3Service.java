@@ -1,8 +1,8 @@
-package com.zerobase.funding.api.utils.s3;
+package com.zerobase.funding.api.common.s3;
 
 import static com.zerobase.funding.global.exception.ErrorCode.INTERNAL_ERROR;
 
-import com.zerobase.funding.api.utils.s3.exception.S3Exception;
+import com.zerobase.funding.api.common.s3.exception.S3Exception;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Template;
 import java.io.IOException;
@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
-@Component
-public class AwsS3Utils {
+@Service
+public class AwsS3Service {
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
