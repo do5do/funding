@@ -25,12 +25,8 @@ public class MemberDto {
                 .build();
 
         if (member.getAddress() != null) {
-            memberDto.addAddress(AddressDto.fromEntity(member.getAddress()));
+            memberDto.address = AddressDto.fromEntity(member.getAddress());
         }
         return memberDto;
-    }
-
-    private void addAddress(AddressDto address) {
-        this.address = address;
     }
 }

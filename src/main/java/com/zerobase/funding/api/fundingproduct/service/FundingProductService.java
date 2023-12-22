@@ -1,7 +1,7 @@
 package com.zerobase.funding.api.fundingproduct.service;
 
 import com.zerobase.funding.api.auth.service.AuthenticationService;
-import com.zerobase.funding.api.fundingproduct.dto.Registration;
+import com.zerobase.funding.api.fundingproduct.dto.RegistrationRequest;
 import com.zerobase.funding.api.fundingproduct.dto.SearchCondition;
 import com.zerobase.funding.api.fundingproduct.dto.model.FundingProductDto;
 import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
@@ -34,7 +34,7 @@ public class FundingProductService {
     }
 
     @Transactional
-    public Long registration(Registration.Request request, MultipartFile thumbnail,
+    public Long registration(RegistrationRequest request, MultipartFile thumbnail,
             List<MultipartFile> details, String memberKey) {
         Member member = authenticationService.getMemberOrThrow(memberKey);
 

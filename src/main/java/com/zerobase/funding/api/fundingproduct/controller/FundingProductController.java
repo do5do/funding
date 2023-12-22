@@ -1,6 +1,6 @@
 package com.zerobase.funding.api.fundingproduct.controller;
 
-import com.zerobase.funding.api.fundingproduct.dto.Registration;
+import com.zerobase.funding.api.fundingproduct.dto.RegistrationRequest;
 import com.zerobase.funding.api.fundingproduct.dto.SearchCondition;
 import com.zerobase.funding.api.fundingproduct.dto.model.FundingProductDto;
 import com.zerobase.funding.api.fundingproduct.service.FundingProductService;
@@ -39,7 +39,7 @@ public class FundingProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> registration(@RequestPart @Valid Registration.Request request,
+    public ResponseEntity<Void> registration(@RequestPart @Valid RegistrationRequest request,
             @RequestPart @NotNull MultipartFile thumbnail,
             @RequestPart @NotNull List<MultipartFile> details,
             @AuthenticationPrincipal UserDetails userDetails) {
