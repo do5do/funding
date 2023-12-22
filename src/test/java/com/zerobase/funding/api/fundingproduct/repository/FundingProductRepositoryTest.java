@@ -1,4 +1,4 @@
-package com.zerobase.funding.api.fundingproduct;
+package com.zerobase.funding.api.fundingproduct.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

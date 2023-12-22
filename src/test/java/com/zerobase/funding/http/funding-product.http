@@ -42,19 +42,19 @@ Content-Type: application/json
 Content-Disposition: form-data; name="thumbnail"; filename="thumbnail.webp"
 Content-Type: multipart/form-data
 
-< ./img/thumbnail.webp
+< ../../src/test/resources/img/thumbnail.webp
 
 --registration
 Content-Disposition: form-data; name="details"; filename="java.png"
 Content-Type: multipart/form-data
 
-< ./img/java.png
+< ../../src/test/resources/img/java.png
 
 --registration
 Content-Disposition: form-data; name="details"; filename="jpa.png"
 Content-Type: multipart/form-data
 
-< ./img/jpa.png
+< ../../src/test/resources/img/jpa.png
 --registration
 
 ###

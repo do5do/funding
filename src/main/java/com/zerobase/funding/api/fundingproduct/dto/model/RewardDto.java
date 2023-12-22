@@ -1,13 +1,22 @@
 package com.zerobase.funding.api.fundingproduct.dto.model;
 
 import com.zerobase.funding.domain.reward.entity.Reward;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
 public record RewardDto(
+        @NotBlank
         String title,
+
+        @NotBlank
         String description,
+
+        @NotNull
         Integer price,
+
+        @NotNull
         Integer stockQuantity
 ) {
 
