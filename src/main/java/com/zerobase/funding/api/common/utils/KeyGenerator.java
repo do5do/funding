@@ -1,4 +1,4 @@
-package com.zerobase.funding.api.utils;
+package com.zerobase.funding.api.common.utils;
 
 import java.util.UUID;
 

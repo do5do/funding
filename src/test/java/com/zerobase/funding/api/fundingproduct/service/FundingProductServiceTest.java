@@ -20,7 +20,7 @@ import com.zerobase.funding.api.fundingproduct.dto.SearchCondition;
 import com.zerobase.funding.api.fundingproduct.dto.model.FundingProductDto;
 import com.zerobase.funding.api.fundingproduct.dto.model.RewardDto;
 import com.zerobase.funding.api.fundingproduct.type.FilterType;
-import com.zerobase.funding.api.utils.s3.AwsS3Utils;
+import com.zerobase.funding.api.common.s3.AwsS3Service;
 import com.zerobase.funding.common.builder.MemberBuilder;
 import com.zerobase.funding.common.constants.RewardConstants;
 import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
@@ -51,7 +51,7 @@ class FundingProductServiceTest {
     FundingProductRepository fundingProductRepository;
 
     @Mock
-    AwsS3Utils awsS3Utils;
+    AwsS3Service awsS3Service;
 
     @Mock
     AuthenticationService authenticationService;
@@ -95,10 +95,10 @@ class FundingProductServiceTest {
         given(authenticationService.getMemberOrThrow(any()))
                 .willReturn(MemberBuilder.member());
 
-        given(awsS3Utils.uploadFile(any()))
+        given(awsS3Service.uploadFile(any()))
                 .willReturn("thumbnail_url");
 
-        given(awsS3Utils.uploadFiles(any()))
+        given(awsS3Service.uploadFiles(any()))
                 .willReturn(List.of("detail_url"));
 
         given(fundingProductRepository.save(any()))
