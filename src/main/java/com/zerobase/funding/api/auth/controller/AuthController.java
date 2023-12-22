@@ -1,7 +1,6 @@
 package com.zerobase.funding.api.auth.controller;
 
 import com.zerobase.funding.api.auth.dto.LoginResponse;
-import com.zerobase.funding.api.auth.dto.LogoutResponse;
 import com.zerobase.funding.api.auth.service.RefreshTokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +23,8 @@ public class AuthController {
     }
 
     @DeleteMapping("/auth/logout")
-    public ResponseEntity<LogoutResponse> logout(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(new LogoutResponse(
-                refreshTokenService.deleteRefreshToken(userDetails.getUsername())));
+    public ResponseEntity<Void> logout(@AuthenticationPrincipal UserDetails userDetails) {
+        refreshTokenService.deleteRefreshToken(userDetails.getUsername());
+        return ResponseEntity.noContent().build();
     }
 }

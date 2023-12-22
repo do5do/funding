@@ -1,6 +1,6 @@
 package com.zerobase.funding.api.config;
 
-import com.zerobase.funding.global.converter.ParamTypeConverterFactory;
+import com.zerobase.funding.api.converter.ParamTypeConverterFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

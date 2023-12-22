@@ -1,8 +1,8 @@
-package com.zerobase.funding.global.utils.s3;
+package com.zerobase.funding.api.utils.s3;
 
-import static com.zerobase.funding.api.exception.ErrorCode.INTERNAL_ERROR;
+import static com.zerobase.funding.global.exception.ErrorCode.INTERNAL_ERROR;
 
-import com.zerobase.funding.global.utils.s3.exception.S3Exception;
+import com.zerobase.funding.api.utils.s3.exception.S3Exception;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Template;
 import java.io.IOException;

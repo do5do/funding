@@ -21,9 +21,8 @@ public class RefreshTokenService {
         return refreshToken.map(RefreshToken::getRefreshToken).orElse(null);
     }
 
-    public String deleteRefreshToken(String memberKey) {
+    public void deleteRefreshToken(String memberKey) {
         refreshTokenRepository.deleteById(memberKey);
-        return memberKey;
     }
 
     @Transactional

@@ -1,4 +1,4 @@
-package com.zerobase.funding.global.constants;
+package com.zerobase.funding.api.constants;
 
 public final class Token {
 

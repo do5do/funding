@@ -1,4 +1,4 @@
-package com.zerobase.funding.api.exception;
+package com.zerobase.funding.global.exception;
 
 import static org.springframework.http.HttpStatus.*;
 
