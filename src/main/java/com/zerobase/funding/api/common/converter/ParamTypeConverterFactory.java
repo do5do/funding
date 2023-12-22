@@ -1,4 +1,4 @@
-package com.zerobase.funding.api.converter;
+package com.zerobase.funding.api.common.converter;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;

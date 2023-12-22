@@ -1,4 +1,4 @@
-package com.zerobase.funding.global.exception;
+package com.zerobase.funding.api.exception;
 
 import lombok.Getter;
 

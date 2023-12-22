@@ -9,7 +9,7 @@ import com.zerobase.funding.domain.fundingproduct.entity.Image;
 import com.zerobase.funding.domain.fundingproduct.entity.ImageType;
 import com.zerobase.funding.domain.fundingproduct.repository.FundingProductRepository;
 import com.zerobase.funding.domain.member.entity.Member;
-import com.zerobase.funding.api.common.s3.AwsS3Service;
+import com.zerobase.funding.api.s3.AwsS3Service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

@@ -2,7 +2,7 @@ package com.zerobase.funding.api.auth.jwt;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.zerobase.funding.api.constants.Token;
+import com.zerobase.funding.api.common.constants.Token;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

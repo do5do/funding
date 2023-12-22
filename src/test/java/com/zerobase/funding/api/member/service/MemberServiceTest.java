@@ -1,6 +1,6 @@
 package com.zerobase.funding.api.member.service;
 
-import static com.zerobase.funding.global.exception.ErrorCode.MEMBER_NOT_FOUND;
+import static com.zerobase.funding.api.exception.ErrorCode.MEMBER_NOT_FOUND;
 import static com.zerobase.funding.common.constants.MemberConstants.EMAIL;
 import static com.zerobase.funding.common.constants.MemberConstants.MEMBER_KEY;
 import static com.zerobase.funding.common.constants.MemberConstants.NAME;
