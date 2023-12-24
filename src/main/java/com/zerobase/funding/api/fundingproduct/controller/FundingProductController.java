@@ -31,6 +31,12 @@ public class FundingProductController {
 
     private final FundingProductService fundingProductService;
 
+    /**
+     * 펀딩 상품 목록 조회
+     * @param pageable 페이지
+     * @param searchCondition 필터, 정렬 조건
+     * @return 펀딩 상품 목록
+     */
     @GetMapping
     public ResponseEntity<Slice<FundingProductDto>> fundingProducts(
             @PageableDefault(sort = "id", direction = Direction.DESC) final Pageable pageable,
@@ -38,6 +44,14 @@ public class FundingProductController {
         return ResponseEntity.ok(fundingProductService.fundingProducts(pageable, searchCondition));
     }
 
+    /**
+     * 펀딩 상품 등록
+     * @param request 등록 요청 정보
+     * @param thumbnail 상품 썸네일 이미지
+     * @param details 상품 디테일 이미지
+     * @param userDetails 인증 유저 정보
+     * @return 201 created
+     */
     @PostMapping
     public ResponseEntity<Void> registration(@RequestPart @Valid RegistrationRequest request,
             @RequestPart @NotNull MultipartFile thumbnail,
