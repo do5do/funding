@@ -21,6 +21,7 @@ import com.zerobase.funding.api.fundingproduct.dto.model.FundingProductDto;
 import com.zerobase.funding.api.fundingproduct.dto.model.RewardDto;
 import com.zerobase.funding.api.fundingproduct.type.FilterType;
 import com.zerobase.funding.api.s3.AwsS3Service;
+import com.zerobase.funding.api.s3.dto.S3FileDto;
 import com.zerobase.funding.common.builder.MemberBuilder;
 import com.zerobase.funding.common.constants.RewardConstants;
 import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
@@ -96,10 +97,10 @@ class FundingProductServiceTest {
                 .willReturn(MemberBuilder.member());
 
         given(awsS3Service.uploadFile(any()))
-                .willReturn("thumbnail_url");
+                .willReturn(new S3FileDto("thumbnail_url", ""));
 
         given(awsS3Service.uploadFiles(any()))
-                .willReturn(List.of("detail_url"));
+                .willReturn(List.of(new S3FileDto("detail_url", "")));
 
         given(fundingProductRepository.save(any()))
                 .willReturn(getFundingProduct());
