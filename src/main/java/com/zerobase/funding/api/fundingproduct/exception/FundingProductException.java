@@ -8,4 +8,8 @@ public class FundingProductException extends CustomException {
     public FundingProductException(ErrorCode errorCode) {
         super(errorCode);
     }
+
+    public FundingProductException(ErrorCode errorCode, String message) {
+        super(errorCode, message);
+    }
 }

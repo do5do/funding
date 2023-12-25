@@ -49,7 +49,7 @@ public class FundingProductService {
 
         request.rewards().forEach(o -> fundingProduct.addRewards(o.toEntity()));
 
-        fundingProductRepository.save(fundingProduct);
+        fundingProductRepository.save(fundingProduct); // todo multi insert 가능한지?
         return fundingProduct.getId();
     }
 }

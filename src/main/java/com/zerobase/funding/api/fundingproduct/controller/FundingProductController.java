@@ -4,8 +4,9 @@ import com.zerobase.funding.api.fundingproduct.dto.RegistrationRequest;
 import com.zerobase.funding.api.fundingproduct.dto.SearchCondition;
 import com.zerobase.funding.api.fundingproduct.dto.model.FundingProductDto;
 import com.zerobase.funding.api.fundingproduct.service.FundingProductService;
+import com.zerobase.funding.api.fundingproduct.validatiion.ValidFile;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+@Validated
 @RequestMapping("/funding-products")
 @RequiredArgsConstructor
 @RestController
@@ -54,8 +57,8 @@ public class FundingProductController {
      */
     @PostMapping
     public ResponseEntity<Void> registration(@RequestPart @Valid RegistrationRequest request,
-            @RequestPart @NotNull MultipartFile thumbnail,
-            @RequestPart @NotNull List<MultipartFile> details,
+            @RequestPart @ValidFile MultipartFile thumbnail,
+            @RequestPart @Size(min = 1, max = 5) List<@ValidFile MultipartFile> details,
             @AuthenticationPrincipal UserDetails userDetails) {
         Long savedFundingProductId = fundingProductService.registration(request, thumbnail,
                 details, userDetails.getUsername());

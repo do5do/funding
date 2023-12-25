@@ -6,6 +6,7 @@ import static com.zerobase.funding.common.constants.FundingProductConstants.STAR
 import static com.zerobase.funding.common.constants.FundingProductConstants.TARGET_AMOUNT;
 import static com.zerobase.funding.common.constants.FundingProductConstants.TITLE;
 import static com.zerobase.funding.common.constants.MemberConstants.MEMBER_KEY;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -21,6 +22,7 @@ import com.zerobase.funding.api.fundingproduct.dto.model.FundingProductDto;
 import com.zerobase.funding.api.fundingproduct.dto.model.RewardDto;
 import com.zerobase.funding.api.fundingproduct.service.FundingProductService;
 import com.zerobase.funding.common.constants.RewardConstants;
+import jakarta.validation.ConstraintViolationException;
 import java.io.FileInputStream;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -200,7 +202,6 @@ class FundingProductControllerTest {
         RegistrationRequest request = RegistrationRequest.builder()
                 .title(TITLE)
                 .description(DESCRIPTION)
-//                .startDate(START_DATE)
                 .endDate(END_DATE)
                 .targetAmount(TARGET_AMOUNT)
                 .rewards(List.of(RewardDto.builder()
@@ -251,6 +252,97 @@ class FundingProductControllerTest {
                         .file(json)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
+                .andDo(print());
+    }
+
+    @Test
+    @WithMockUser(username = MEMBER_KEY)
+    @DisplayName("펀딩 상품 등록 실패 - 유효하지 않은 파일")
+    void registration_invalid_file() throws Exception {
+        // given
+        given(fundingProductService.registration(any(), any(), any(), any()))
+                .willReturn(1L);
+
+        // when
+        // then
+        RegistrationRequest request = RegistrationRequest.builder()
+                .title(TITLE)
+                .description(DESCRIPTION)
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .targetAmount(TARGET_AMOUNT)
+                .rewards(List.of(RewardDto.builder()
+                        .title(RewardConstants.TITLE)
+                        .description(RewardConstants.DESCRIPTION)
+                        .price(RewardConstants.PRICE)
+                        .stockQuantity(RewardConstants.STOCK_QUANTITY)
+                        .build()))
+                .build();
+
+        MockMultipartFile json = new MockMultipartFile("request", "jsondata",
+                "application/json", objectMapper.writeValueAsBytes(request));
+
+        MockMultipartFile thumbnail = new MockMultipartFile("thumbnail", "invalidFile.json",
+                "application/json", new FileInputStream("src/test/resources/img/invalidFile.json"));
+
+        MockMultipartFile details = new MockMultipartFile("details", "java.png",
+                "png", new FileInputStream("src/test/resources/img/java.png"));
+
+        mockMvc.perform(multipart(HttpMethod.POST, "/funding-products")
+                        .file(json)
+                        .file(thumbnail)
+                        .file(details)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof
+                        ConstraintViolationException))
+                .andDo(print());
+    }
+
+    @Test
+    @WithMockUser(username = MEMBER_KEY)
+    @DisplayName("펀딩 상품 등록 실패 - 파일 개수 초과 (max 5)")
+    void registration_invalid_file_list() throws Exception {
+        // given
+        given(fundingProductService.registration(any(), any(), any(), any()))
+                .willReturn(1L);
+
+        // when
+        // then
+        RegistrationRequest request = RegistrationRequest.builder()
+                .title(TITLE)
+                .description(DESCRIPTION)
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .targetAmount(TARGET_AMOUNT)
+                .rewards(List.of(RewardDto.builder()
+                        .title(RewardConstants.TITLE)
+                        .description(RewardConstants.DESCRIPTION)
+                        .price(RewardConstants.PRICE)
+                        .stockQuantity(RewardConstants.STOCK_QUANTITY)
+                        .build()))
+                .build();
+
+        MockMultipartFile json = new MockMultipartFile("request", "jsondata",
+                "application/json", objectMapper.writeValueAsBytes(request));
+
+        MockMultipartFile thumbnail = new MockMultipartFile("thumbnail", "thumbnail.webp",
+                "webp", new FileInputStream("src/test/resources/img/thumbnail.webp"));
+
+        MockMultipartFile details = new MockMultipartFile("details", "java.png",
+                "png", new FileInputStream("src/test/resources/img/java.png"));
+
+        mockMvc.perform(multipart(HttpMethod.POST, "/funding-products")
+                        .file(json)
+                        .file(thumbnail)
+                        .file(details)
+                        .file(details)
+                        .file(details)
+                        .file(details)
+                        .file(details)
+                        .file(details)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof
+                        ConstraintViolationException))
                 .andDo(print());
     }
 
