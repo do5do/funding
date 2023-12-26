@@ -2,7 +2,7 @@ package com.zerobase.funding.api.auth.jwt;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.zerobase.funding.global.constants.Token;
+import com.zerobase.funding.api.common.constants.Token;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,20 +28,22 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = resolveToken(request);
 
         if (tokenProvider.validateToken(accessToken)) {
-            Authentication authentication = tokenProvider.getAuthentication(accessToken);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            setAuthentication(accessToken);
         } else {
             String reissueAccessToken = tokenProvider.reissueAccessToken(accessToken);
 
             if (StringUtils.hasText(reissueAccessToken)) {
-                Authentication authentication = tokenProvider.getAuthentication(reissueAccessToken);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                response.setHeader(AUTHORIZATION, reissueAccessToken);
+                setAuthentication(reissueAccessToken);
+                response.setHeader(AUTHORIZATION, Token.TOKEN_PREFIX + reissueAccessToken);
             }
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private void setAuthentication(String accessToken) {
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     private String resolveToken(HttpServletRequest request) {

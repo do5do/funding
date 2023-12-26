@@ -1,7 +1,7 @@
 package com.zerobase.funding.domain.reward.entity;
 
 import com.zerobase.funding.domain.common.entity.BaseTimeEntity;
-import com.zerobase.funding.domain.product.entity.Product;
+import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,8 +37,8 @@ public class Reward extends BaseTimeEntity {
     private Integer stockQuantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "funding_product_id")
+    private FundingProduct fundingProduct;
 
     @Builder
     public Reward(String title, String description, Integer price, Integer stockQuantity) {
@@ -48,7 +48,7 @@ public class Reward extends BaseTimeEntity {
         this.stockQuantity = stockQuantity;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setFundingProduct(FundingProduct fundingProduct) {
+        this.fundingProduct = fundingProduct;
     }
 }
