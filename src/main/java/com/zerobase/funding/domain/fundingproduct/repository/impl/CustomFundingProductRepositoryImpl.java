@@ -43,18 +43,20 @@ public class CustomFundingProductRepositoryImpl implements CustomFundingProductR
     }
 
     private OrderSpecifier<?> ordering(SortType sortType) {
-        if (SortType.VIEWS.equals(sortType)) {
+        if (SortType.VIEWS == sortType) {
             return fundingProduct.views.desc();
         }
         return fundingProduct.id.desc();
     }
 
     private BooleanExpression filtering(FilterType filterType) {
-        if (FilterType.UPCOMING.equals(filterType)) {
-            return fundingProduct.startDate.after(LocalDate.now());
+        LocalDate now = LocalDate.now();
+
+        if (FilterType.UPCOMING == filterType) {
+            return fundingProduct.startDate.after(now);
         }
 
-        return fundingProduct.startDate.loe(LocalDate.now())
-                .and(fundingProduct.endDate.goe(LocalDate.now()));
+        return fundingProduct.startDate.loe(now)
+                .and(fundingProduct.endDate.goe(now));
     }
 }

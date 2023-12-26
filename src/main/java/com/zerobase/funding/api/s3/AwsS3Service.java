@@ -9,7 +9,6 @@ import io.awspring.cloud.s3.S3Exception;
 import io.awspring.cloud.s3.S3Template;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -49,9 +48,9 @@ public class AwsS3Service {
     }
 
     public List<S3FileDto> uploadFiles(List<MultipartFile> files) { // todo 병렬처리
-        List<S3FileDto> fileUrls = new ArrayList<>();
-        files.forEach(file -> fileUrls.add(uploadFile(file)));
-        return fileUrls;
+        return files.stream()
+                .map(this::uploadFile)
+                .toList();
     }
 
     public void deleteFile(S3FileDto fileDto) {
