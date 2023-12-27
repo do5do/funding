@@ -249,7 +249,7 @@ class FundingProductServiceTest {
     @DisplayName("펀딩 상품 조회 성공")
     void detail() {
         // given
-        given(fundingProductRepository.findByIdFetch(any()))
+        given(fundingProductRepository.findById(any()))
                 .willReturn(Optional.of(getFundingProduct()));
 
         given(fundingService.findByRewards(any()))
@@ -280,7 +280,7 @@ class FundingProductServiceTest {
     @DisplayName("펀딩 상품 조회 실패 - 없는 상품")
     void detail_funding_product_not_found() {
         // given
-        given(fundingProductRepository.findByIdFetch(any()))
+        given(fundingProductRepository.findById(any()))
                 .willThrow(new FundingProductException(FUNDING_PRODUCT_NOT_FOUND));
 
         // when
