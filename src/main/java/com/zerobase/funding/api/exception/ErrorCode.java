@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     // auth
     ILLEGAL_REGISTRATION_ID(NOT_ACCEPTABLE, "illegal registration id"),
-    TOKEN_NOT_FOUND(NOT_FOUND, "토큰을 찾을 수 없습니다."),
 
     // member
     MEMBER_NOT_FOUND(NOT_FOUND, "회원을 찾을 수 없습니다."),
