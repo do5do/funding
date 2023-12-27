@@ -7,6 +7,7 @@ import lombok.Builder;
 
 @Builder
 public record FundingProductDto(
+        Long id,
         String title,
         String description,
         LocalDate startDate,
@@ -18,14 +19,15 @@ public record FundingProductDto(
 ) {
 
 
-    public static FundingProductDto fromEntity(FundingProduct fundingProduct) {
+    public static FundingProductDto fromEntity(FundingProduct fundingProduct, Integer views) {
         return FundingProductDto.builder()
+                .id(fundingProduct.getId())
                 .title(fundingProduct.getTitle())
                 .description(fundingProduct.getDescription())
                 .startDate(fundingProduct.getStartDate())
                 .endDate(fundingProduct.getEndDate())
                 .targetAmount(fundingProduct.getTargetAmount())
-                .views(fundingProduct.getViews())
+                .views(views)
                 .rewards(fundingProduct.getRewards().stream()
                         .map(RewardDto::fromEntity).toList())
                 .images(fundingProduct.getImages().stream()

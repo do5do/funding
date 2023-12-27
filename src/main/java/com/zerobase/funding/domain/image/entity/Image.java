@@ -1,6 +1,7 @@
-package com.zerobase.funding.domain.fundingproduct.entity;
+package com.zerobase.funding.domain.image.entity;
 
 import com.zerobase.funding.domain.common.entity.BaseTimeEntity;
+import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

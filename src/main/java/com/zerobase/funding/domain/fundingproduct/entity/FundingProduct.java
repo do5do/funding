@@ -1,6 +1,7 @@
 package com.zerobase.funding.domain.fundingproduct.entity;
 
 import com.zerobase.funding.domain.common.entity.BaseTimeEntity;
+import com.zerobase.funding.domain.image.entity.Image;
 import com.zerobase.funding.domain.member.entity.Member;
 import com.zerobase.funding.domain.reward.entity.Reward;
 import jakarta.persistence.CascadeType;
@@ -83,8 +84,8 @@ public class FundingProduct extends BaseTimeEntity {
         image.setFundingProduct(this);
     }
 
-    // todo redis에 저장되어 있는 뷰 수를 주기적으로 넣어줌
-    public void updateViews(Integer views) {
+    public FundingProduct setViews(Integer views) {
         this.views = views;
+        return this;
     }
 }

@@ -19,6 +19,10 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(NOT_FOUND, "회원을 찾을 수 없습니다."),
 
     // funding product
+    FUNDING_PRODUCT_NOT_FOUND(NOT_FOUND, "펀딩 상품을 찾을 수 없습니다."),
+
+    // funding
+    FUNDING_NOT_FOUND(NOT_FOUND, "펀딩을 찾을 수 없습니다."),
 
     // global
     RESOURCE_NOT_FOUND(NOT_FOUND, "요청한 자원을 찾을 수 없습니다."),

@@ -91,7 +91,7 @@ class FundingProductControllerTest {
     void registration() throws Exception {
         // given
         given(fundingProductService.registration(any(), any(), any(), any()))
-                .willReturn(1L);
+                .willReturn(getFundingProductDto());
 
         // when
         // then
@@ -133,7 +133,7 @@ class FundingProductControllerTest {
     void registration_validate_rewards_not_empty() throws Exception {
         // given
         given(fundingProductService.registration(any(), any(), any(), any()))
-                .willReturn(1L);
+                .willReturn(getFundingProductDto());
 
         // when
         // then
@@ -162,7 +162,7 @@ class FundingProductControllerTest {
     void registration_validate_rewards_title_not_blank() throws Exception {
         // given
         given(fundingProductService.registration(any(), any(), any(), any()))
-                .willReturn(1L);
+                .willReturn(getFundingProductDto());
 
         // when
         // then
@@ -195,7 +195,7 @@ class FundingProductControllerTest {
     void registration_validate_start_date_not_null() throws Exception {
         // given
         given(fundingProductService.registration(any(), any(), any(), any()))
-                .willReturn(1L);
+                .willReturn(getFundingProductDto());
 
         // when
         // then
@@ -228,7 +228,7 @@ class FundingProductControllerTest {
     void registration_validate_target_amount_not_null() throws Exception {
         // given
         given(fundingProductService.registration(any(), any(), any(), any()))
-                .willReturn(1L);
+                .willReturn(getFundingProductDto());
 
         // when
         // then
@@ -261,7 +261,7 @@ class FundingProductControllerTest {
     void registration_invalid_file() throws Exception {
         // given
         given(fundingProductService.registration(any(), any(), any(), any()))
-                .willReturn(1L);
+                .willReturn(getFundingProductDto());
 
         // when
         // then
@@ -304,7 +304,7 @@ class FundingProductControllerTest {
     void registration_invalid_file_list() throws Exception {
         // given
         given(fundingProductService.registration(any(), any(), any(), any()))
-                .willReturn(1L);
+                .willReturn(getFundingProductDto());
 
         // when
         // then
