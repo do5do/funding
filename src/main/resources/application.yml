@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: oauth, key, cloud
+    include: oauth, cloud
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -16,6 +16,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+        default_batch_fetch_size: 500
     open-in-view: false
 
   data:
@@ -29,3 +30,16 @@ spring:
       location: /tmp/s3
       max-file-size: 2MB
       max-request-size: 12MB
+
+jwt:
+  key: c3ByaW5nLWJvb3QtYXBpLWp3dC1zZWNyZXQta2V5LXN1cGVyLXNlY3JldC15ZXMteWVzLXllcy0yNAo=
+
+scheduler:
+  funding-product:
+    views: "0 0 0 * * *"
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

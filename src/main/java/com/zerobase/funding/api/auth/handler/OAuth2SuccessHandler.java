@@ -22,7 +22,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
         String accessToken = tokenProvider.generateAccessToken(authentication);
-        tokenProvider.generateRefreshToken(authentication);
+        tokenProvider.generateRefreshToken(authentication, accessToken);
 
         String redirectUrl = UriComponentsBuilder.fromUriString(URI)
                 .queryParam("accessToken", accessToken)

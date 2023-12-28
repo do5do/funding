@@ -4,6 +4,7 @@ import com.zerobase.funding.api.auth.handler.CustomAccessDeniedHandler;
 import com.zerobase.funding.api.auth.handler.CustomAuthenticationEntryPoint;
 import com.zerobase.funding.api.auth.handler.OAuth2SuccessHandler;
 import com.zerobase.funding.api.auth.jwt.TokenAuthenticationFilter;
+import com.zerobase.funding.api.auth.jwt.TokenExceptionFilter;
 import com.zerobase.funding.api.auth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -59,6 +60,7 @@ public class SecurityConfig {
 
                 .addFilterBefore(tokenAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new TokenExceptionFilter(), tokenAuthenticationFilter.getClass())
 
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint())

@@ -38,6 +38,12 @@ public class GlobalExceptionHandler {
         return toResponse(RESOURCE_NOT_FOUND, RESOURCE_NOT_FOUND.getMessage());
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleException(Exception e) {
+        log.error("Exception is occurred. ", e);
+        return toResponse(INTERNAL_ERROR, e.getMessage());
+    }
+
     private static ResponseEntity<ErrorResponse> toResponse(ErrorCode errorCode, String message) {
         return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(new ErrorResponse(errorCode, message));
