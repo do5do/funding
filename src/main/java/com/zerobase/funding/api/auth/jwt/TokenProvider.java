@@ -1,10 +1,17 @@
 package com.zerobase.funding.api.auth.jwt;
 
-import com.zerobase.funding.api.auth.service.RefreshTokenService;
+import static com.zerobase.funding.api.exception.ErrorCode.INVALID_JWT_SIGNATURE;
+import static com.zerobase.funding.api.exception.ErrorCode.INVALID_TOKEN;
+
+import com.zerobase.funding.api.auth.exception.TokenException;
+import com.zerobase.funding.api.auth.service.TokenService;
+import com.zerobase.funding.domain.redis.entity.Token;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SecurityException;
 import jakarta.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.Date;
@@ -29,7 +36,7 @@ public class TokenProvider {
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30L;
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60L * 24 * 7;
     private static final String KEY_ROLE = "role";
-    private final RefreshTokenService refreshTokenService;
+    private final TokenService tokenService;
 
     @PostConstruct
     private void setSecretKey() {
@@ -42,7 +49,7 @@ public class TokenProvider {
 
     public void generateRefreshToken(Authentication authentication, String accessToken) {
         String refreshToken = generateToken(authentication, REFRESH_TOKEN_EXPIRE_TIME);
-        refreshTokenService.saveOrUpdate(authentication.getName(), refreshToken, accessToken);
+        tokenService.saveOrUpdate(authentication.getName(), refreshToken, accessToken);
     }
 
     private String generateToken(Authentication authentication, long expireTime) {
@@ -73,10 +80,13 @@ public class TokenProvider {
 
     public String reissueAccessToken(String accessToken) {
         if (StringUtils.hasText(accessToken)) {
-            String refreshToken = refreshTokenService.updateOrNull(accessToken);
+            Token token = tokenService.findByAccessTokenOrThrow(accessToken);
+            String refreshToken = token.getRefreshToken();
 
             if (validateToken(refreshToken)) {
-                return generateAccessToken(getAuthentication(refreshToken));
+                String reissueAccessToken = generateAccessToken(getAuthentication(refreshToken));
+                tokenService.updateToken(reissueAccessToken, token);
+                return reissueAccessToken;
             }
         }
         return null;
@@ -97,6 +107,10 @@ public class TokenProvider {
                     .parseSignedClaims(token).getPayload();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
+        } catch (MalformedJwtException e) {
+            throw new TokenException(INVALID_TOKEN);
+        } catch (SecurityException e) {
+            throw new TokenException(INVALID_JWT_SIGNATURE);
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.zerobase.funding.api.auth.controller;
 
 import com.zerobase.funding.api.auth.dto.LoginResponse;
-import com.zerobase.funding.api.auth.service.RefreshTokenService;
+import com.zerobase.funding.api.auth.service.TokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthController {
 
-    private final RefreshTokenService refreshTokenService;
+    private final TokenService tokenService;
 
     @GetMapping("/auth/success")
     public ResponseEntity<LoginResponse> loginSuccess(@Valid LoginResponse loginResponse) {
@@ -24,7 +24,7 @@ public class AuthController {
 
     @DeleteMapping("/auth/logout")
     public ResponseEntity<Void> logout(@AuthenticationPrincipal UserDetails userDetails) {
-        refreshTokenService.deleteRefreshToken(userDetails.getUsername());
+        tokenService.deleteRefreshToken(userDetails.getUsername());
         return ResponseEntity.noContent().build();
     }
 }

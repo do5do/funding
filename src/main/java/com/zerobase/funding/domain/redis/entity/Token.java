@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.index.Indexed;
 @Getter
 @AllArgsConstructor
 @RedisHash(value = "jwt", timeToLive = 60 * 60 * 24 * 7)
-public class RefreshToken {
+public class Token {
 
     @Id
     private String id;
@@ -19,13 +19,12 @@ public class RefreshToken {
     @Indexed
     private String accessToken;
 
-    public RefreshToken updateRefreshToken(String refreshToken) {
+    public Token updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
         return this;
     }
 
-    public RefreshToken updateAccessToken(String accessToken) {
+    public void updateAccessToken(String accessToken) {
         this.accessToken = accessToken;
-        return this;
     }
 }

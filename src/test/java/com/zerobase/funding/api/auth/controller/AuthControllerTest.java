@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.zerobase.funding.api.auth.jwt.TokenProvider;
-import com.zerobase.funding.api.auth.service.RefreshTokenService;
+import com.zerobase.funding.api.auth.service.TokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 class AuthControllerTest {
 
     @MockBean
-    RefreshTokenService refreshTokenService;
+    TokenService tokenService;
 
     @MockBean
     TokenProvider tokenProvider;
@@ -47,7 +47,7 @@ class AuthControllerTest {
     @DisplayName("로그아웃 처리 - refresh 토큰 삭제")
     void logout() throws Exception {
         // given
-        doNothing().when(refreshTokenService).deleteRefreshToken(any());
+        doNothing().when(tokenService).deleteRefreshToken(any());
 
         // when
         // then
