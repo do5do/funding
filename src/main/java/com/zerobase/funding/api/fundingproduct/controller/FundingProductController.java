@@ -1,10 +1,10 @@
 package com.zerobase.funding.api.fundingproduct.controller;
 
 import com.zerobase.funding.api.fundingproduct.dto.DetailResponse;
+import com.zerobase.funding.api.fundingproduct.dto.Edit;
 import com.zerobase.funding.api.fundingproduct.dto.RegistrationRequest;
 import com.zerobase.funding.api.fundingproduct.dto.SearchCondition;
 import com.zerobase.funding.api.fundingproduct.dto.model.FundingProductDto;
-import com.zerobase.funding.api.fundingproduct.scheduler.ViewsScheduler;
 import com.zerobase.funding.api.fundingproduct.service.FundingProductService;
 import com.zerobase.funding.api.fundingproduct.validatiion.ValidFile;
 import jakarta.validation.Valid;
@@ -21,8 +21,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +38,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class FundingProductController {
 
     private final FundingProductService fundingProductService;
-    private final ViewsScheduler viewsScheduler;
 
     /**
      * 펀딩 상품 목록 조회
@@ -85,5 +86,21 @@ public class FundingProductController {
     @GetMapping("/{id}")
     public ResponseEntity<DetailResponse> detail(@PathVariable Long id) {
         return ResponseEntity.ok(fundingProductService.detail(id));
+    }
+
+    /**
+     * 펀딩 상품 수정
+     *
+     * @param id 펀딩 상품 아이디
+     * @param request 수정 요청 정보
+     * @param userDetails 인증 유저
+     * @return 수정된 상품 정보
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity<Edit.Response> edit(@PathVariable Long id,
+            @RequestBody @Valid Edit.Request request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(
+                fundingProductService.edit(id, request, userDetails.getUsername()));
     }
 }

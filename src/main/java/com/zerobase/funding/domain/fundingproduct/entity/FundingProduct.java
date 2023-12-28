@@ -1,5 +1,6 @@
 package com.zerobase.funding.domain.fundingproduct.entity;
 
+import com.zerobase.funding.api.fundingproduct.dto.Edit;
 import com.zerobase.funding.domain.common.entity.BaseTimeEntity;
 import com.zerobase.funding.domain.image.entity.Image;
 import com.zerobase.funding.domain.member.entity.Member;
@@ -87,5 +88,13 @@ public class FundingProduct extends BaseTimeEntity {
     public FundingProduct setViews(Integer views) {
         this.views = views;
         return this;
+    }
+
+    public void updateFundingProduct(Edit.Request request) {
+        this.title = request.title();
+        this.description = request.description();
+        this.startDate = request.startDate();
+        this.endDate = request.endDate();
+        this.targetAmount = request.targetAmount();
     }
 }

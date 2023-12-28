@@ -2,8 +2,9 @@ package com.zerobase.funding.api.fundingproduct.service;
 
 import com.zerobase.funding.domain.redis.entity.Views;
 import com.zerobase.funding.domain.redis.repository.ViewsRepository;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,9 +33,9 @@ public class ViewsService {
     }
 
     public Map<Long, Views> findAll() {
-        Map<Long, Views> views = new HashMap<>();
-        viewsRepository.findAll().forEach(o ->
-                views.put(Long.parseLong(o.getId()), o));
-        return views;
+        return StreamSupport
+                .stream(viewsRepository.findAll().spliterator(), false)
+                .collect(Collectors.toMap(views -> Long.parseLong(views.getId()),
+                        views -> views));
     }
 }

@@ -1,11 +1,14 @@
 package com.zerobase.funding.api.fundingproduct.service;
 
+import static com.zerobase.funding.api.exception.ErrorCode.FUNDING_PRODUCT_NOT_EDIT;
 import static com.zerobase.funding.api.exception.ErrorCode.FUNDING_PRODUCT_NOT_FOUND;
 import static com.zerobase.funding.api.exception.ErrorCode.INTERNAL_ERROR;
+import static com.zerobase.funding.api.exception.ErrorCode.INVALID_DATE;
 
 import com.zerobase.funding.api.auth.service.AuthenticationService;
 import com.zerobase.funding.api.funding.service.FundingService;
 import com.zerobase.funding.api.fundingproduct.dto.DetailResponse;
+import com.zerobase.funding.api.fundingproduct.dto.Edit;
 import com.zerobase.funding.api.fundingproduct.dto.RegistrationRequest;
 import com.zerobase.funding.api.fundingproduct.dto.SearchCondition;
 import com.zerobase.funding.api.fundingproduct.dto.model.FundingProductDto;
@@ -18,6 +21,7 @@ import com.zerobase.funding.domain.fundingproduct.repository.FundingProductRepos
 import com.zerobase.funding.domain.image.entity.Image;
 import com.zerobase.funding.domain.image.entity.ImageType;
 import com.zerobase.funding.domain.member.entity.Member;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +57,8 @@ public class FundingProductService {
             List<MultipartFile> details, String memberKey) {
         Member member = authenticationService.getMemberOrThrow(memberKey);
 
+        validateDate(request);
+
         S3FileDto fileThumbnail = awsS3Service.uploadFile(thumbnail);
         List<S3FileDto> fileDetails = awsS3Service.uploadFiles(details);
 
@@ -78,6 +84,12 @@ public class FundingProductService {
         }
     }
 
+    private static void validateDate(RegistrationRequest request) {
+        if (request.startDate().isAfter(request.endDate())) {
+            throw new FundingProductException(INVALID_DATE);
+        }
+    }
+
     public DetailResponse detail(Long id) {
         FundingProduct fundingProduct = fundingProductRepository.findById(id)
                 .orElseThrow(() -> new FundingProductException(FUNDING_PRODUCT_NOT_FOUND));
@@ -87,5 +99,27 @@ public class FundingProductService {
         Integer views = viewsService.saveOrUpdate(String.valueOf(id), fundingProduct.getViews());
 
         return DetailResponse.fromEntity(fundingProduct, fundingList, views);
+    }
+
+    @Transactional
+    public Edit.Response edit(Long id, Edit.Request request, String memberKey) {
+        FundingProduct fundingProduct = fundingProductRepository.findByIdFetch(id)
+                .orElseThrow(() -> new FundingProductException(FUNDING_PRODUCT_NOT_FOUND));
+
+        authenticationService.checkAccess(memberKey, fundingProduct.getMember());
+
+        validateFundingProduct(fundingProduct);
+
+        fundingProduct.updateFundingProduct(request);
+        return Edit.Response.fromEntity(fundingProduct);
+    }
+
+    private static void validateFundingProduct(FundingProduct fundingProduct) {
+        LocalDate now = LocalDate.now();
+
+        if (!fundingProduct.getStartDate().isAfter(now)
+                || !fundingProduct.getEndDate().isAfter(now)) {
+            throw new FundingProductException(FUNDING_PRODUCT_NOT_EDIT);
+        }
     }
 }
