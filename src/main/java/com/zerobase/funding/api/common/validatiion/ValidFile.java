@@ -1,4 +1,4 @@
-package com.zerobase.funding.api.fundingproduct.validatiion;
+package com.zerobase.funding.api.common.validatiion;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.CONSTRUCTOR;

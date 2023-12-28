@@ -11,5 +11,5 @@ public interface FundingProductRepository extends JpaRepository<FundingProduct, 
 
     List<FundingProduct> findByIdIn(Set<Long> fundingProductIds);
 
-    Optional<FundingProduct> findByIdAndIsDelete(Long id, boolean isDelete);
+    Optional<FundingProduct> findByIdAndDeleted(Long id, boolean isDelete);
 }

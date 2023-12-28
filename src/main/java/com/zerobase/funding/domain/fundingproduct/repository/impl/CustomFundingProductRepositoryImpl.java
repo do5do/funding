@@ -55,7 +55,7 @@ public class CustomFundingProductRepositoryImpl implements CustomFundingProductR
     }
 
     private BooleanExpression getEqNotDelete() {
-        return fundingProduct.isDelete.eq(false);
+        return fundingProduct.deleted.eq(false);
     }
 
     private OrderSpecifier<?> ordering(SortType sortType) {

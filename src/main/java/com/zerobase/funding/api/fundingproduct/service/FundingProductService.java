@@ -95,7 +95,7 @@ public class FundingProductService {
     }
 
     public DetailResponse detail(Long id) {
-        FundingProduct fundingProduct = fundingProductRepository.findByIdAndIsDelete(id, false)
+        FundingProduct fundingProduct = fundingProductRepository.findByIdAndDeleted(id, false)
                 .orElseThrow(() -> new FundingProductException(FUNDING_PRODUCT_NOT_FOUND));
 
         List<Funding> fundingList = fundingService.findByRewards(fundingProduct.getRewards());
@@ -132,7 +132,7 @@ public class FundingProductService {
                 .map(Image::getFilename)
                 .toList());
 
-        fundingProduct.setDelete(); // 삭제 처리
+        fundingProduct.setDeleted(); // 삭제 처리
     }
 
     private static void validateFundingProduct(FundingProduct fundingProduct) {
@@ -143,7 +143,7 @@ public class FundingProductService {
             throw new FundingProductException(FUNDING_PRODUCT_NOT_EDIT);
         }
 
-        if (fundingProduct.isDelete()) {
+        if (fundingProduct.isDeleted()) {
             throw new FundingProductException(FUNDING_PRODUCT_ALREADY_DELETED);
         }
     }

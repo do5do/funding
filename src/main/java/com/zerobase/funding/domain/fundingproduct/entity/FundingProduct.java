@@ -53,7 +53,7 @@ public class FundingProduct extends BaseTimeEntity {
 
     @Column(nullable = false)
     @ColumnDefault("false")
-    private boolean isDelete = false;
+    private boolean deleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -94,8 +94,8 @@ public class FundingProduct extends BaseTimeEntity {
         return this;
     }
 
-    public void setDelete() {
-        isDelete = false;
+    public void setDeleted() {
+        deleted = true;
     }
 
     public void updateFundingProduct(Edit.Request request) {

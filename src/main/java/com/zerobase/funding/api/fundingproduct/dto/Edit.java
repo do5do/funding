@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 public record Edit() {
 
+    @Builder
     public record Request(
             @NotBlank
             String title,

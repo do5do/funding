@@ -6,7 +6,7 @@ import com.zerobase.funding.api.fundingproduct.dto.RegistrationRequest;
 import com.zerobase.funding.api.fundingproduct.dto.SearchCondition;
 import com.zerobase.funding.api.fundingproduct.dto.model.FundingProductDto;
 import com.zerobase.funding.api.fundingproduct.service.FundingProductService;
-import com.zerobase.funding.api.fundingproduct.validatiion.ValidFile;
+import com.zerobase.funding.api.common.validatiion.ValidFile;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import java.net.URI;
