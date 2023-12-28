@@ -29,7 +29,8 @@ public class CustomFundingProductRepositoryImpl implements CustomFundingProductR
             SearchCondition searchCondition) {
         List<FundingProduct> contents = queryFactory
                 .selectFrom(fundingProduct)
-                .where(filtering(searchCondition.filterType()))
+                .where(filtering(searchCondition.filterType()),
+                        getEqNotDelete())
                 .orderBy(ordering(searchCondition.sortType()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
@@ -49,8 +50,12 @@ public class CustomFundingProductRepositoryImpl implements CustomFundingProductR
         return Optional.ofNullable(queryFactory
                 .selectFrom(fundingProduct)
                 .join(fundingProduct.member, member).fetchJoin()
-                .where(fundingProduct.id.eq(id))
+                .where(fundingProduct.id.eq(id), getEqNotDelete())
                 .fetchOne());
+    }
+
+    private BooleanExpression getEqNotDelete() {
+        return fundingProduct.isDelete.eq(false);
     }
 
     private OrderSpecifier<?> ordering(SortType sortType) {

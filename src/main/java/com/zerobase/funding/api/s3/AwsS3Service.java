@@ -53,16 +53,16 @@ public class AwsS3Service {
                 .toList();
     }
 
-    public void deleteFile(S3FileDto fileDto) {
+    public void deleteFile(String filename) {
         try {
-            s3Template.deleteObject(bucketName, fileDto.filename());
+            s3Template.deleteObject(bucketName, filename);
         } catch (S3Exception e) {
             log.error("S3Exception is occurred. ", e);
             throw new AwsS3Exception(INTERNAL_ERROR, e.getMessage());
         }
     }
 
-    public void deleteFiles(List<S3FileDto> fileDtos) {
-        fileDtos.forEach(this::deleteFile);
+    public void deleteFiles(List<String> filenames) {
+        filenames.forEach(this::deleteFile);
     }
 }

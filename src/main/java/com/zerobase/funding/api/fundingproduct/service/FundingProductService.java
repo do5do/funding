@@ -1,5 +1,6 @@
 package com.zerobase.funding.api.fundingproduct.service;
 
+import static com.zerobase.funding.api.exception.ErrorCode.FUNDING_PRODUCT_ALREADY_DELETED;
 import static com.zerobase.funding.api.exception.ErrorCode.FUNDING_PRODUCT_NOT_EDIT;
 import static com.zerobase.funding.api.exception.ErrorCode.FUNDING_PRODUCT_NOT_FOUND;
 import static com.zerobase.funding.api.exception.ErrorCode.INTERNAL_ERROR;
@@ -66,9 +67,10 @@ public class FundingProductService {
             FundingProduct fundingProduct = request.toEntity();
             fundingProduct.addMember(member);
 
-            fundingProduct.addImages(new Image(ImageType.THUMBNAIL, fileThumbnail.url()));
+            fundingProduct.addImages(new Image(ImageType.THUMBNAIL, fileThumbnail.url(),
+                    fileThumbnail.filename()));
             fileDetails.forEach(fileDto -> fundingProduct.addImages(
-                    new Image(ImageType.DETAIL, fileDto.url())));
+                    new Image(ImageType.DETAIL, fileDto.url(), fileDto.filename())));
 
             request.rewards().forEach(o -> fundingProduct.addRewards(o.toEntity()));
 
@@ -78,8 +80,10 @@ public class FundingProductService {
             return FundingProductDto.fromEntity(fundingProduct, fundingProduct.getViews());
         } catch (Exception e) {
             log.error("Exception is occurred. ", e);
-            awsS3Service.deleteFile(fileThumbnail);
-            awsS3Service.deleteFiles(fileDetails);
+            awsS3Service.deleteFile(fileThumbnail.filename());
+            awsS3Service.deleteFiles(fileDetails.stream()
+                    .map(S3FileDto::filename)
+                    .toList());
             throw new FundingProductException(INTERNAL_ERROR);
         }
     }
@@ -91,7 +95,7 @@ public class FundingProductService {
     }
 
     public DetailResponse detail(Long id) {
-        FundingProduct fundingProduct = fundingProductRepository.findById(id)
+        FundingProduct fundingProduct = fundingProductRepository.findByIdAndIsDelete(id, false)
                 .orElseThrow(() -> new FundingProductException(FUNDING_PRODUCT_NOT_FOUND));
 
         List<Funding> fundingList = fundingService.findByRewards(fundingProduct.getRewards());
@@ -114,12 +118,33 @@ public class FundingProductService {
         return Edit.Response.fromEntity(fundingProduct);
     }
 
+    @Transactional
+    public void delete(Long id, String memberKey) {
+        FundingProduct fundingProduct = fundingProductRepository.findByIdFetch(id)
+                .orElseThrow(() -> new FundingProductException(FUNDING_PRODUCT_NOT_FOUND));
+
+        authenticationService.checkAccess(memberKey, fundingProduct.getMember());
+
+        validateFundingProduct(fundingProduct);
+
+        viewsService.deleteViews(String.valueOf(id));
+        awsS3Service.deleteFiles(fundingProduct.getImages().stream()
+                .map(Image::getFilename)
+                .toList());
+
+        fundingProduct.setDelete(); // 삭제 처리
+    }
+
     private static void validateFundingProduct(FundingProduct fundingProduct) {
         LocalDate now = LocalDate.now();
 
         if (!fundingProduct.getStartDate().isAfter(now)
                 || !fundingProduct.getEndDate().isAfter(now)) {
             throw new FundingProductException(FUNDING_PRODUCT_NOT_EDIT);
+        }
+
+        if (fundingProduct.isDelete()) {
+            throw new FundingProductException(FUNDING_PRODUCT_ALREADY_DELETED);
         }
     }
 }

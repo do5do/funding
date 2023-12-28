@@ -93,7 +93,7 @@ class FundingProductServiceTest {
 
         fundingProduct.addMember(MemberBuilder.member());
         fundingProduct.addRewards(reward);
-        fundingProduct.addImages(new Image(ImageType.THUMBNAIL, "url"));
+        fundingProduct.addImages(new Image(ImageType.THUMBNAIL, "url", "name"));
 
         given(fundingProductRepository.findFundingProducts(any(), any()))
                 .willReturn(new SliceImpl<>(List.of(fundingProduct)));

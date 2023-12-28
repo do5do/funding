@@ -32,13 +32,17 @@ public class Image extends BaseTimeEntity {
     @Column(nullable = false)
     private String url;
 
+    @Column(nullable = false)
+    private String filename;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "funding_product_id")
     private FundingProduct fundingProduct;
 
-    public Image(ImageType imageType, String url) {
+    public Image(ImageType imageType, String url, String filename) {
         this.imageType = imageType;
         this.url = url;
+        this.filename = filename;
     }
 
     public void setFundingProduct(FundingProduct fundingProduct) {

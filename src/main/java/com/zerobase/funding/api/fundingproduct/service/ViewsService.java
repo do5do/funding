@@ -38,4 +38,9 @@ public class ViewsService {
                 .collect(Collectors.toMap(views -> Long.parseLong(views.getId()),
                         views -> views));
     }
+
+    @Transactional
+    public void deleteViews(String fundingProductId) {
+        viewsRepository.deleteById(fundingProductId);
+    }
 }

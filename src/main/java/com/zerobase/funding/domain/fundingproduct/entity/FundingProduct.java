@@ -51,15 +51,19 @@ public class FundingProduct extends BaseTimeEntity {
     @ColumnDefault("0")
     private Integer views;
 
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    private boolean isDelete = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @OneToMany(mappedBy = "fundingProduct", cascade = CascadeType.ALL)
-    private List<Reward> rewards = new ArrayList<>();
+    private final List<Reward> rewards = new ArrayList<>();
 
     @OneToMany(mappedBy = "fundingProduct", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
+    private final List<Image> images = new ArrayList<>();
 
     @Builder
     public FundingProduct(String title, String description, LocalDate startDate, LocalDate endDate,
@@ -88,6 +92,10 @@ public class FundingProduct extends BaseTimeEntity {
     public FundingProduct setViews(Integer views) {
         this.views = views;
         return this;
+    }
+
+    public void setDelete() {
+        isDelete = false;
     }
 
     public void updateFundingProduct(Edit.Request request) {

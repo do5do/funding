@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -102,5 +103,19 @@ public class FundingProductController {
             @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(
                 fundingProductService.edit(id, request, userDetails.getUsername()));
+    }
+
+    /**
+     * 펀딩 상품 삭제
+     *
+     * @param id 펀딩 상품 아이디
+     * @param userDetails 인증 유저
+     * @return 204 noContent
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        fundingProductService.delete(id, userDetails.getUsername());
+        return ResponseEntity.noContent().build();
     }
 }
