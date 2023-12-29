@@ -152,7 +152,7 @@ public class FundingProductService {
         images.forEach(o -> awsS3Service.deleteFile(o.getFilename()));
     }
 
-    private static void validateFundingProduct(FundingProduct fundingProduct) {
+    private void validateFundingProduct(FundingProduct fundingProduct) {
         LocalDate now = LocalDate.now();
 
         if (!fundingProduct.getStartDate().isAfter(now)
