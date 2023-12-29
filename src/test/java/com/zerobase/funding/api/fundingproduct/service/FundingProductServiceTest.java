@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -54,6 +53,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -131,10 +131,8 @@ class FundingProductServiceTest {
                 .willReturn(MemberBuilder.member());
 
         given(awsS3Service.uploadFile(any()))
-                .willReturn(new S3FileDto("thumbnail_url", ""));
-
-        given(awsS3Service.uploadFiles(any()))
-                .willReturn(List.of(new S3FileDto("detail_url", "")));
+                .willReturn(CompletableFuture
+                        .completedFuture(new S3FileDto("thumbnail_url", "")));
 
         given(fundingProductRepository.save(any()))
                 .willReturn(getFundingProduct());
@@ -214,13 +212,9 @@ class FundingProductServiceTest {
         given(authenticationService.getMemberOrThrow(any()))
                 .willReturn(MemberBuilder.member());
 
-        S3FileDto fileThumbnail = new S3FileDto("thumbnail_url", "");
         given(awsS3Service.uploadFile(any()))
-                .willReturn(fileThumbnail);
-
-        List<S3FileDto> fileDetails = List.of(new S3FileDto("detail_url", ""));
-        given(awsS3Service.uploadFiles(any()))
-                .willReturn(fileDetails);
+                .willReturn(CompletableFuture
+                        .completedFuture(new S3FileDto("thumbnail_url", "")));
 
         given(fundingProductRepository.save(any()))
                 .willThrow(new FundingProductException(INTERNAL_ERROR));
@@ -241,8 +235,7 @@ class FundingProductServiceTest {
                                 MEMBER_KEY));
 
         // then
-        verify(awsS3Service, times(1)).deleteFile(anyString());
-        verify(awsS3Service, times(1)).deleteFiles(anyList());
+        verify(awsS3Service, times(2)).deleteFile(anyString());
         assertEquals(INTERNAL_ERROR, exception.getErrorCode());
     }
 
@@ -513,6 +506,8 @@ class FundingProductServiceTest {
                 .startDate(LocalDate.of(2023, 12, 28))
                 .endDate(LocalDate.of(2023, 12, 28))
                 .build();
+        List.of(new Image(ImageType.THUMBNAIL, "", ""))
+                        .forEach(fundingProduct::addImages);
 
         given(fundingProductRepository.findByIdFetch(any()))
                 .willReturn(Optional.of(fundingProduct));
@@ -524,14 +519,14 @@ class FundingProductServiceTest {
         localDateMock.when(LocalDate::now).thenReturn(NOW);
 
         doNothing().when(viewsService).deleteViews(any());
-        doNothing().when(awsS3Service).deleteFiles(any());
+        doNothing().when(awsS3Service).deleteFile(any());
 
         // when
         fundingProductService.delete(1L, MEMBER_KEY);
 
         // then
         verify(viewsService, times(1)).deleteViews(anyString());
-        verify(awsS3Service, times(1)).deleteFiles(anyList());
+        verify(awsS3Service, times(1)).deleteFile(any());
         assertTrue(fundingProduct.isDeleted());
         localDateMock.close();
     }

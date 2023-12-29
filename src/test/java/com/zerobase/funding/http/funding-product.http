@@ -74,6 +74,6 @@ Authorization: {{token}}
 }
 
 ### delete fundingProduct
-DELETE {{host}}/funding-products/1
+DELETE {{host}}/funding-products/3
 Content-Type: application/json
 Authorization: {{token}}

@@ -9,11 +9,12 @@ import io.awspring.cloud.s3.S3Exception;
 import io.awspring.cloud.s3.S3Template;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +29,8 @@ public class AwsS3Service {
 
     private final S3Template s3Template;
 
-    public S3FileDto uploadFile(MultipartFile file) {
+    @Async
+    public CompletableFuture<S3FileDto> uploadFile(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
         String extension = StringUtils.getFilenameExtension(originalFilename);
         String filename = UUID.randomUUID() + "." + extension;
@@ -39,20 +41,16 @@ public class AwsS3Service {
                 .build();
 
         try (InputStream inputStream = file.getInputStream()) {
-            return new S3FileDto(s3Template.upload(bucketName, filename, inputStream, objectMetadata)
-                    .getURL().toString(), filename);
+            return CompletableFuture.completedFuture(new S3FileDto(
+                    s3Template.upload(bucketName, filename, inputStream, objectMetadata)
+                            .getURL().toString(), filename));
         } catch (IOException e) {
             log.error("IOException is occurred. ", e);
             throw new AwsS3Exception(INTERNAL_ERROR, "file upload to S3 failed.");
         }
     }
 
-    public List<S3FileDto> uploadFiles(List<MultipartFile> files) { // todo 병렬처리
-        return files.stream()
-                .map(this::uploadFile)
-                .toList();
-    }
-
+    @Async
     public void deleteFile(String filename) {
         try {
             s3Template.deleteObject(bucketName, filename);
@@ -60,9 +58,5 @@ public class AwsS3Service {
             log.error("S3Exception is occurred. ", e);
             throw new AwsS3Exception(INTERNAL_ERROR, e.getMessage());
         }
-    }
-
-    public void deleteFiles(List<String> filenames) {
-        filenames.forEach(this::deleteFile);
     }
 }

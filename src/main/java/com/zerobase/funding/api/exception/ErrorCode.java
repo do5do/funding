@@ -21,8 +21,7 @@ public enum ErrorCode {
     // funding product
     FUNDING_PRODUCT_NOT_FOUND(NOT_FOUND, "펀딩 상품을 찾을 수 없습니다."),
     INVALID_DATE(BAD_REQUEST, "시작 날짜는 완료 날짜 이전이어야 합니다."),
-    FUNDING_PRODUCT_NOT_EDIT(BAD_REQUEST, "펀딩 진행중인 상품은 수정할 수 없습니다."),
-    FUNDING_PRODUCT_NOT_DELETE(BAD_REQUEST, "펀딩 진행중인 상품은 삭제할 수 없습니다."),
+    FUNDING_PRODUCT_NOT_EDIT(BAD_REQUEST, "펀딩 진행중인 상품은 수정/삭제할 수 없습니다."),
     FUNDING_PRODUCT_ALREADY_DELETED(BAD_REQUEST, "이미 삭제된 상품입니다."),
 
     // funding
