@@ -1,5 +1,6 @@
 package com.zerobase.funding.api.funding.service;
 
+import static com.zerobase.funding.api.exception.ErrorCode.ADDRESS_IS_REQUIRED;
 import static com.zerobase.funding.api.exception.ErrorCode.FUNDING_NOT_FOUND;
 import static com.zerobase.funding.api.exception.ErrorCode.OUT_OF_STOCK;
 import static com.zerobase.funding.api.exception.ErrorCode.REWARD_NOT_MATCH;
@@ -8,7 +9,6 @@ import static com.zerobase.funding.domain.funding.entity.Status.IN_PROGRESS;
 
 import com.zerobase.funding.api.auth.service.AuthenticationService;
 import com.zerobase.funding.api.funding.dto.CreateFunding;
-import com.zerobase.funding.api.funding.dto.CreateFunding.Request;
 import com.zerobase.funding.api.funding.exception.FundingException;
 import com.zerobase.funding.api.member.dto.model.AddressDto;
 import com.zerobase.funding.api.reward.service.RewardService;
@@ -46,14 +46,11 @@ public class FundingService {
             String memberKey) {
         Member member = authenticationService.getMemberOrThrow(memberKey);
         Reward reward = rewardService.getRewardOrThrow(request.rewardId());
+
         validateReward(request, reward);
         reward.decreaseStockQuantity(); // todo lock을 어디서 걸어야 할까 이 메소드 자체?
 
-        // 배송지 저장
-        AddressDto requestAddress = request.address();
-        if (requestAddress != null) {
-            member.addAddress(requestAddress.toEntity());
-        }
+        validateAddAddress(request, member);
 
         Funding funding = request.toEntity(reward.getPrice());
         funding.addMember(member);
@@ -65,7 +62,19 @@ public class FundingService {
                 reward.getTitle(), reward.getPrice(), funding.getId());
     }
 
-    private static void validateReward(Request request, Reward reward) {
+    private void validateAddAddress(CreateFunding.Request request, Member member) {
+        AddressDto requestAddress = request.address();
+
+        if (member.getAddress() == null && requestAddress == null) {
+            throw new FundingException(ADDRESS_IS_REQUIRED);
+        }
+
+        if (requestAddress != null) {
+            member.addAddress(requestAddress.toEntity());
+        }
+    }
+
+    private void validateReward(CreateFunding.Request request, Reward reward) {
         if (!Objects.equals(request.fundingProductId(), reward.getFundingProduct().getId())) {
             throw new FundingException(REWARD_NOT_MATCH);
         }

@@ -27,6 +27,7 @@ public enum ErrorCode {
     // funding
     FUNDING_NOT_FOUND(NOT_FOUND, "펀딩을 찾을 수 없습니다."),
     REWARD_NOT_MATCH(BAD_REQUEST, "해당 상품의 리워드가 아닙니다."),
+    ADDRESS_IS_REQUIRED(BAD_REQUEST, "배송할 주소가 필요합니다."),
     OUT_OF_STOCK(BAD_REQUEST, "재고가 부족합니다."),
 
     // reward

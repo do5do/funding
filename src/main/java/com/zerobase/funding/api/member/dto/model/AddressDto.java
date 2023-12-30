@@ -1,12 +1,18 @@
 package com.zerobase.funding.api.member.dto.model;
 
 import com.zerobase.funding.domain.member.entity.Address;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 @Builder
 public record AddressDto(
+        @NotBlank
         String roadAddress,
+
+        @NotBlank
         String addressDetail,
+
+        @NotBlank
         String zipcode
 ) {
 
