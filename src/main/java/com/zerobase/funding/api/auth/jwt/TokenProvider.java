@@ -16,11 +16,13 @@ import jakarta.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
@@ -56,9 +58,13 @@ public class TokenProvider {
         Date now = new Date();
         Date expiredDate = new Date(now.getTime() + expireTime);
 
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining());
+
         return Jwts.builder()
                 .subject(authentication.getName())
-                .claim(KEY_ROLE, authentication.getAuthorities())
+                .claim(KEY_ROLE, authorities)
                 .issuedAt(now)
                 .expiration(expiredDate)
                 .signWith(secretKey, Jwts.SIG.HS512)
