@@ -9,9 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 
-import com.zerobase.funding.api.auth.service.AuthenticationService;
 import com.zerobase.funding.api.member.dto.MemberEditRequest;
 import com.zerobase.funding.api.member.dto.model.MemberDto;
 import com.zerobase.funding.api.member.exception.MemberException;
@@ -30,9 +28,6 @@ class MemberServiceTest {
     @Mock
     MemberRepository memberRepository;
 
-    @Mock
-    AuthenticationService authenticationService;
-
     @InjectMocks
     MemberService memberService;
 
@@ -42,8 +37,6 @@ class MemberServiceTest {
         // given
         given(memberRepository.findByMemberKey(any()))
                 .willReturn(Optional.of(MemberBuilder.member()));
-
-        doNothing().when(authenticationService).checkAccess(any(), any());
 
         // when
         MemberDto memberDto = memberService.memberInfo(MEMBER_KEY);
@@ -75,8 +68,6 @@ class MemberServiceTest {
         // given
         given(memberRepository.findByMemberKey(any()))
                 .willReturn(Optional.of(MemberBuilder.member()));
-
-        doNothing().when(authenticationService).checkAccess(any(), any());
 
         // when
         String requestName = "dohee";
