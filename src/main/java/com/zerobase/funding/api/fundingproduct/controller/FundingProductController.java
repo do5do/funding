@@ -1,5 +1,6 @@
 package com.zerobase.funding.api.fundingproduct.controller;
 
+import com.zerobase.funding.api.auth.annotaion.RoleUser;
 import com.zerobase.funding.api.fundingproduct.dto.DetailResponse;
 import com.zerobase.funding.api.fundingproduct.dto.Edit;
 import com.zerobase.funding.api.fundingproduct.dto.RegistrationRequest;
@@ -63,6 +64,7 @@ public class FundingProductController {
      * @param userDetails 인증 유저 정보
      * @return 201 created
      */
+    @RoleUser
     @PostMapping
     public ResponseEntity<Void> registration(@RequestPart @Valid RegistrationRequest request,
             @RequestPart @ValidFile MultipartFile thumbnail,
@@ -97,6 +99,7 @@ public class FundingProductController {
      * @param userDetails 인증 유저
      * @return 수정된 상품 정보
      */
+    @RoleUser
     @PatchMapping("/{id}")
     public ResponseEntity<Edit.Response> edit(@PathVariable Long id,
             @RequestBody @Valid Edit.Request request,
@@ -112,6 +115,7 @@ public class FundingProductController {
      * @param userDetails 인증 유저
      * @return 204 noContent
      */
+    @RoleUser
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id,
             @AuthenticationPrincipal UserDetails userDetails) {
