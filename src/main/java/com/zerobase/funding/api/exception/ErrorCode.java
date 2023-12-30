@@ -26,6 +26,14 @@ public enum ErrorCode {
 
     // funding
     FUNDING_NOT_FOUND(NOT_FOUND, "펀딩을 찾을 수 없습니다."),
+    REWARD_NOT_MATCH(BAD_REQUEST, "해당 상품의 리워드가 아닙니다."),
+    OUT_OF_STOCK(BAD_REQUEST, "재고가 부족합니다."),
+
+    // reward
+    REWARD_NOT_FOUND(NOT_FOUND, "리워드를 찾을 수 없습니다."),
+
+    // payment history
+    INVALID_PAYMENT(BAD_REQUEST, "결제 정보가 일치하지 않습니다."),
 
     // global
     NO_ACCESS(FORBIDDEN, "접근 권한이 없습니다."),

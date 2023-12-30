@@ -51,4 +51,8 @@ public class Reward extends BaseTimeEntity {
     public void setFundingProduct(FundingProduct fundingProduct) {
         this.fundingProduct = fundingProduct;
     }
+
+    public void decreaseStockQuantity() {
+        stockQuantity--;
+    }
 }

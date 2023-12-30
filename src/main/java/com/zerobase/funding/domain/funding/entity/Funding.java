@@ -4,6 +4,7 @@ import com.zerobase.funding.domain.common.entity.BaseTimeEntity;
 import com.zerobase.funding.domain.delivery.entity.Delivery;
 import com.zerobase.funding.domain.member.entity.Member;
 import com.zerobase.funding.domain.reward.entity.Reward;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,7 +41,7 @@ public class Funding extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
@@ -52,5 +53,17 @@ public class Funding extends BaseTimeEntity {
     public Funding(Status status, Integer fundingPrice) {
         this.status = status;
         this.fundingPrice = fundingPrice;
+    }
+
+    public void addMember(Member member) {
+        this.member = member;
+    }
+
+    public void addReward(Reward reward) {
+        this.reward = reward;
+    }
+
+    public void addDelivery(Delivery delivery) {
+        this.delivery = delivery;
     }
 }
