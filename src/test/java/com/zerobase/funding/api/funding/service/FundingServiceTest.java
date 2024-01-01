@@ -95,6 +95,7 @@ class FundingServiceTest {
             // then
             assertEquals(price, response.price());
             assertEquals(rewardTitle, response.rewardTitle());
+            assertEquals(reward.getStockQuantity(), 0);
         }
 
         @Test

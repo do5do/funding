@@ -5,7 +5,7 @@ Authorization: {{token}}
 
 {
   "fundingProductId": 1,
-  "rewardId": 1,
+  "rewardId": 2,
   "address": {
     "roadAddress": "부산시 대연동",
     "addressDetail": "어쩌구 저쩌구",

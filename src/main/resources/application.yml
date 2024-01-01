@@ -38,8 +38,10 @@ scheduler:
   funding-product:
     views: "0 0 0 * * *"
 
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: DEBUG
+#        transaction:
+#          interceptor: TRACE

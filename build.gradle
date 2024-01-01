@@ -46,6 +46,8 @@ dependencies {
 
 	implementation 'org.apache.tika:tika-core:2.9.1'
 
+	implementation 'org.redisson:redisson-spring-boot-starter:3.25.2'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'

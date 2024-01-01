@@ -1,6 +1,7 @@
 package com.zerobase.funding.api.funding.service;
 
 import static com.zerobase.funding.api.exception.ErrorCode.ADDRESS_IS_REQUIRED;
+import static com.zerobase.funding.api.exception.ErrorCode.ALREADY_FUNDED_REWARD;
 import static com.zerobase.funding.api.exception.ErrorCode.FUNDING_NOT_FOUND;
 import static com.zerobase.funding.api.exception.ErrorCode.OUT_OF_STOCK;
 import static com.zerobase.funding.api.exception.ErrorCode.REWARD_NOT_MATCH;
@@ -8,8 +9,10 @@ import static com.zerobase.funding.domain.delivery.entity.Status.WAITING;
 import static com.zerobase.funding.domain.funding.entity.Status.IN_PROGRESS;
 
 import com.zerobase.funding.api.auth.service.AuthenticationService;
+import com.zerobase.funding.api.common.constants.RedisKey;
 import com.zerobase.funding.api.funding.dto.CreateFunding;
 import com.zerobase.funding.api.funding.exception.FundingException;
+import com.zerobase.funding.api.lock.annotation.DistributedLock;
 import com.zerobase.funding.api.member.dto.model.AddressDto;
 import com.zerobase.funding.api.reward.service.RewardService;
 import com.zerobase.funding.domain.delivery.entity.Delivery;
@@ -20,9 +23,11 @@ import com.zerobase.funding.domain.reward.entity.Reward;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
@@ -41,25 +46,34 @@ public class FundingService {
                 .orElseThrow(() -> new FundingException(FUNDING_NOT_FOUND));
     }
 
+    @DistributedLock(keyPrefix = RedisKey.FUNDING_LOCK_PREFIX, idField = "rewardId")
     @Transactional
     public CreateFunding.Response createFunding(CreateFunding.Request request,
             String memberKey) {
         Member member = authenticationService.getMemberOrThrow(memberKey);
         Reward reward = rewardService.getRewardOrThrow(request.rewardId());
 
-        validateReward(request, reward);
-        reward.decreaseStockQuantity(); // todo lock을 어디서 걸어야 할까 이 메소드 자체?
-
         validateAddAddress(request, member);
+        validateReward(request, reward);
+        validateFunding(member, reward);
+
+        reward.decreaseStockQuantity();
 
         Funding funding = request.toEntity(reward.getPrice());
         funding.addMember(member);
         funding.addReward(reward);
         funding.addDelivery(new Delivery(WAITING));
-        fundingRepository.save(funding);
+
+        fundingRepository.saveAndFlush(funding);
 
         return CreateFunding.Response.from(
                 reward.getTitle(), reward.getPrice(), funding.getId());
+    }
+
+    private void validateFunding(Member member, Reward reward) {
+        if (fundingRepository.existsByMemberAndReward(member, reward)) {
+            throw new FundingException(ALREADY_FUNDED_REWARD);
+        }
     }
 
     private void validateAddAddress(CreateFunding.Request request, Member member) {
