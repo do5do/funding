@@ -67,12 +67,13 @@ public class FundingProduct extends BaseTimeEntity {
 
     @Builder
     public FundingProduct(String title, String description, LocalDate startDate, LocalDate endDate,
-            Integer targetAmount) {
+            Integer targetAmount, Long id) {
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
         this.targetAmount = targetAmount;
+        this.id = id;
     }
 
     public void addMember(Member member) {
