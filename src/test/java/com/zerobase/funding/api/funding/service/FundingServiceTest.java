@@ -1,6 +1,7 @@
 package com.zerobase.funding.api.funding.service;
 
 import static com.zerobase.funding.api.exception.ErrorCode.ADDRESS_IS_REQUIRED;
+import static com.zerobase.funding.api.exception.ErrorCode.ALREADY_FUNDED_REWARD;
 import static com.zerobase.funding.api.exception.ErrorCode.OUT_OF_STOCK;
 import static com.zerobase.funding.api.exception.ErrorCode.REWARD_NOT_MATCH;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -64,6 +65,12 @@ class FundingServiceTest {
                 .status(Status.IN_PROGRESS)
                 .build();
 
+        AddressDto addressDto = AddressDto.builder()
+                .roadAddress("road")
+                            .addressDetail("detail")
+                            .zipcode("1234-56")
+                            .build();
+
         @Test
         @DisplayName("성공")
         void createFunding_success() {
@@ -78,16 +85,14 @@ class FundingServiceTest {
             given(rewardService.getRewardOrThrow(any()))
                     .willReturn(reward);
 
-            given(fundingRepository.save(any()))
+            given(fundingRepository.existsByMemberAndReward(any(), any()))
+                    .willReturn(false);
+
+            given(fundingRepository.saveAndFlush(any()))
                     .willReturn(funding);
 
             // when
-            Request request = new Request(1L, 1L,
-                    AddressDto.builder()
-                            .roadAddress("road")
-                            .addressDetail("detail")
-                            .zipcode("1234-56")
-                            .build());
+            Request request = new Request(1L, 1L, addressDto);
 
             Response response =
                     fundingService.createFunding(request, memberKey);
@@ -114,7 +119,8 @@ class FundingServiceTest {
 
             // when
             // then
-            Request request = new Request(1L, 1L, null);
+            Request request = new Request(1L, 1L, addressDto);
+
             assertThatThrownBy(() ->
                     fundingService.createFunding(request, memberKey))
                     .isInstanceOf(FundingException.class)
@@ -143,7 +149,8 @@ class FundingServiceTest {
 
             // when
             // then
-            Request request = new Request(1L, 1L, null);
+            Request request = new Request(1L, 1L, addressDto);
+
             assertThatThrownBy(() ->
                     fundingService.createFunding(request, memberKey))
                     .isInstanceOf(FundingException.class)
@@ -171,6 +178,32 @@ class FundingServiceTest {
                     fundingService.createFunding(request, memberKey))
                     .isInstanceOf(FundingException.class)
                     .hasMessageContaining(ADDRESS_IS_REQUIRED.getMessage());
+        }
+
+        @Test
+        @DisplayName("실패 - 이미 펀딩한 리워드는 중복 펀딩할 수 없다.")
+        void createFunding_already_funded_reward() {
+            // given
+            reward.setFundingProduct(FundingProduct.builder()
+                    .id(1L)
+                    .build());
+
+            given(authenticationService.getMemberOrThrow(any()))
+                    .willReturn(member);
+
+            given(rewardService.getRewardOrThrow(any()))
+                    .willReturn(reward);
+
+            given(fundingRepository.existsByMemberAndReward(any(), any()))
+                    .willReturn(true);
+
+            // when
+            // then
+            Request request = new Request(1L, 1L, addressDto);
+            assertThatThrownBy(() ->
+                    fundingService.createFunding(request, memberKey))
+                    .isInstanceOf(FundingException.class)
+                    .hasMessageContaining(ALREADY_FUNDED_REWARD.getMessage());
         }
     }
 }
