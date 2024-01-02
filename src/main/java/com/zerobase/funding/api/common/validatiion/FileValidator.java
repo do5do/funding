@@ -1,4 +1,4 @@
-package com.zerobase.funding.api.fundingproduct.validatiion;
+package com.zerobase.funding.api.common.validatiion;
 
 import static com.zerobase.funding.api.exception.ErrorCode.INTERNAL_ERROR;
 

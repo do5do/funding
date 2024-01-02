@@ -1,5 +1,6 @@
 package com.zerobase.funding.api.member.controller;
 
+import com.zerobase.funding.api.auth.annotaion.RoleUser;
 import com.zerobase.funding.api.member.dto.model.MemberDto;
 import com.zerobase.funding.api.member.dto.MemberEditRequest;
 import com.zerobase.funding.api.member.service.MemberService;
@@ -21,12 +22,14 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @RoleUser
     @GetMapping
     public ResponseEntity<MemberDto> memberInfo(
             @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity.ok(memberService.memberInfo(userDetails.getUsername()));
     }
 
+    @RoleUser
     @PatchMapping
     public ResponseEntity<MemberDto> memberEdit(
             @RequestBody @Valid MemberEditRequest request,

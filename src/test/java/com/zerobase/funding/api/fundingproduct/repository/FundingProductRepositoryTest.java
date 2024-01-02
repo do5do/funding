@@ -47,7 +47,7 @@ public class FundingProductRepositoryTest {
                     .targetAmount(10000)
                     .build();
             fundingProduct.addMember(member);
-            fundingProduct.updateViews(i);
+            fundingProduct.setViews(i);
 
             fundingProductRepository.save(fundingProduct);
         }
@@ -64,8 +64,6 @@ public class FundingProductRepositoryTest {
         // when
         Slice<FundingProduct> fundingProducts = fundingProductRepository.findFundingProducts(
                 pageRequest, searchCondition);
-
-        System.out.println(fundingProductRepository.findAll().size());
 
         // then
         FundingProduct fundingProductFirst = fundingProducts.getContent().get(0);
@@ -89,8 +87,6 @@ public class FundingProductRepositoryTest {
         Slice<FundingProduct> fundingProducts = fundingProductRepository.findFundingProducts(
                 pageRequest, searchCondition);
 
-        System.out.println(fundingProductRepository.findAll().size());
-
         // then
         FundingProduct fundingProductFirst = fundingProducts.getContent().get(0);
         FundingProduct fundingProductSecond = fundingProducts.getContent().get(1);
@@ -112,8 +108,6 @@ public class FundingProductRepositoryTest {
         // when
         Slice<FundingProduct> fundingProducts = fundingProductRepository.findFundingProducts(
                 pageRequest, searchCondition);
-
-        System.out.println(fundingProductRepository.findAll().size());
 
         // then
         assertEquals(1, fundingProducts.getContent().size());

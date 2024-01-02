@@ -1,6 +1,7 @@
 package com.zerobase.funding.domain.fundingproduct.repository.impl;
 
 import static com.zerobase.funding.domain.fundingproduct.entity.QFundingProduct.fundingProduct;
+import static com.zerobase.funding.domain.member.entity.QMember.member;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -12,6 +13,7 @@ import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
 import com.zerobase.funding.domain.fundingproduct.repository.CustomFundingProductRepository;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -27,7 +29,8 @@ public class CustomFundingProductRepositoryImpl implements CustomFundingProductR
             SearchCondition searchCondition) {
         List<FundingProduct> contents = queryFactory
                 .selectFrom(fundingProduct)
-                .where(filtering(searchCondition.filterType()))
+                .where(filtering(searchCondition.filterType()),
+                        getEqNotDelete())
                 .orderBy(ordering(searchCondition.sortType()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
@@ -40,6 +43,19 @@ public class CustomFundingProductRepositoryImpl implements CustomFundingProductR
         }
 
         return new SliceImpl<>(contents, pageable, hasNext);
+    }
+
+    @Override
+    public Optional<FundingProduct> findByIdFetch(Long id) {
+        return Optional.ofNullable(queryFactory
+                .selectFrom(fundingProduct)
+                .join(fundingProduct.member, member).fetchJoin()
+                .where(fundingProduct.id.eq(id), getEqNotDelete())
+                .fetchOne());
+    }
+
+    private BooleanExpression getEqNotDelete() {
+        return fundingProduct.deleted.eq(false);
     }
 
     private OrderSpecifier<?> ordering(SortType sortType) {

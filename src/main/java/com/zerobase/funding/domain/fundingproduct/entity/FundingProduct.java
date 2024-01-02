@@ -1,6 +1,8 @@
 package com.zerobase.funding.domain.fundingproduct.entity;
 
+import com.zerobase.funding.api.fundingproduct.dto.Edit;
 import com.zerobase.funding.domain.common.entity.BaseTimeEntity;
+import com.zerobase.funding.domain.image.entity.Image;
 import com.zerobase.funding.domain.member.entity.Member;
 import com.zerobase.funding.domain.reward.entity.Reward;
 import jakarta.persistence.CascadeType;
@@ -49,15 +51,19 @@ public class FundingProduct extends BaseTimeEntity {
     @ColumnDefault("0")
     private Integer views;
 
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    private boolean deleted = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @OneToMany(mappedBy = "fundingProduct", cascade = CascadeType.ALL)
-    private List<Reward> rewards = new ArrayList<>();
+    private final List<Reward> rewards = new ArrayList<>();
 
     @OneToMany(mappedBy = "fundingProduct", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
+    private final List<Image> images = new ArrayList<>();
 
     @Builder
     public FundingProduct(String title, String description, LocalDate startDate, LocalDate endDate,
@@ -83,8 +89,20 @@ public class FundingProduct extends BaseTimeEntity {
         image.setFundingProduct(this);
     }
 
-    // todo redis에 저장되어 있는 뷰 수를 주기적으로 넣어줌
-    public void updateViews(Integer views) {
+    public FundingProduct setViews(Integer views) {
         this.views = views;
+        return this;
+    }
+
+    public void setDeleted() {
+        deleted = true;
+    }
+
+    public void updateFundingProduct(Edit.Request request) {
+        this.title = request.title();
+        this.description = request.description();
+        this.startDate = request.startDate();
+        this.endDate = request.endDate();
+        this.targetAmount = request.targetAmount();
     }
 }

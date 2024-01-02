@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum Status {
-    UPCOMING("오픈예정"),
     IN_PROGRESS("진행중"),
     COMPLETE("완료"),
     FAIL("실패");

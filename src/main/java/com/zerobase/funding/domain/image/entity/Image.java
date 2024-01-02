@@ -1,6 +1,7 @@
-package com.zerobase.funding.domain.fundingproduct.entity;
+package com.zerobase.funding.domain.image.entity;
 
 import com.zerobase.funding.domain.common.entity.BaseTimeEntity;
+import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -31,13 +32,17 @@ public class Image extends BaseTimeEntity {
     @Column(nullable = false)
     private String url;
 
+    @Column(nullable = false)
+    private String filename;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "funding_product_id")
     private FundingProduct fundingProduct;
 
-    public Image(ImageType imageType, String url) {
+    public Image(ImageType imageType, String url, String filename) {
         this.imageType = imageType;
         this.url = url;
+        this.filename = filename;
     }
 
     public void setFundingProduct(FundingProduct fundingProduct) {

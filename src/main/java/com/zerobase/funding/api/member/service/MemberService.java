@@ -2,8 +2,8 @@ package com.zerobase.funding.api.member.service;
 
 import static com.zerobase.funding.api.exception.ErrorCode.MEMBER_NOT_FOUND;
 
-import com.zerobase.funding.api.member.dto.model.MemberDto;
 import com.zerobase.funding.api.member.dto.MemberEditRequest;
+import com.zerobase.funding.api.member.dto.model.MemberDto;
 import com.zerobase.funding.api.member.exception.MemberException;
 import com.zerobase.funding.domain.member.entity.Member;
 import com.zerobase.funding.domain.member.repository.MemberRepository;
@@ -18,7 +18,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public MemberDto memberInfo(String memberKey) {
-        return MemberDto.fromEntity(findByMemberKeyOrThrow(memberKey));
+        Member member = findByMemberKeyOrThrow(memberKey);
+        return MemberDto.fromEntity(member);
     }
 
     @Transactional

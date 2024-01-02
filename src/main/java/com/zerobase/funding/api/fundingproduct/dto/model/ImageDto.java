@@ -1,7 +1,7 @@
 package com.zerobase.funding.api.fundingproduct.dto.model;
 
-import com.zerobase.funding.domain.fundingproduct.entity.Image;
-import com.zerobase.funding.domain.fundingproduct.entity.ImageType;
+import com.zerobase.funding.domain.image.entity.Image;
+import com.zerobase.funding.domain.image.entity.ImageType;
 
 public record ImageDto(
         ImageType imageType,
