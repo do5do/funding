@@ -155,8 +155,7 @@ public class FundingProductService {
     private void validateFundingProduct(FundingProduct fundingProduct) {
         LocalDate now = LocalDate.now();
 
-        if (!fundingProduct.getStartDate().isAfter(now)
-                || !fundingProduct.getEndDate().isAfter(now)) {
+        if (!fundingProduct.getStartDate().isAfter(now)) {
             throw new FundingProductException(FUNDING_PRODUCT_NOT_EDIT);
         }
 
