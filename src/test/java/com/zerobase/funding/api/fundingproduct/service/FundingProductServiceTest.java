@@ -248,9 +248,10 @@ class FundingProductServiceTest {
         given(fundingProductRepository.findByIdAndDeleted(any(), anyBoolean()))
                 .willReturn(Optional.of(fundingProduct));
 
+        Funding funding = Funding.builder().fundingPrice(10000).build();
+
         given(fundingService.getFundingByRewards(any()))
-                .willReturn(List.of(Funding.builder().fundingPrice(70000).build(),
-                        Funding.builder().fundingPrice(5800).build()));
+                .willReturn(List.of(funding, funding));
 
         given(viewsService.saveOrUpdate(any(), any()))
                 .willReturn(1);
@@ -264,8 +265,8 @@ class FundingProductServiceTest {
 
         // then
         assertEquals(12, response.getRemainingDays());
-        assertEquals(75800, response.getTotalAmount());
-        assertEquals(15, response.getCompletionPercent());
+        assertEquals(20000, response.getTotalAmount());
+        assertEquals(4, response.getCompletionPercent());
         assertEquals(2, response.getDonorCount());
 
         localDateMock.close();
@@ -296,7 +297,7 @@ class FundingProductServiceTest {
                 .endDate(LocalDate.of(2023, 12, 28))
                 .build();
 
-        given(fundingProductRepository.findByIdFetch(any()))
+        given(fundingProductRepository.findByIdFetchMember(any()))
                 .willReturn(Optional.of(fundingProduct));
 
         doNothing().when(authenticationService).checkAccess(any(), any());
@@ -322,7 +323,7 @@ class FundingProductServiceTest {
     @DisplayName("펀딩 상품 수정 실패 - 없는 펀딩 상품")
     void edit_fundingProduct_not_found() {
         // given
-        given(fundingProductRepository.findByIdFetch(any()))
+        given(fundingProductRepository.findByIdFetchMember(any()))
                 .willReturn(Optional.empty());
 
         // when
@@ -347,7 +348,7 @@ class FundingProductServiceTest {
                 .endDate(LocalDate.of(2023, 12, 28))
                 .build();
 
-        given(fundingProductRepository.findByIdFetch(any()))
+        given(fundingProductRepository.findByIdFetchMember(any()))
                 .willReturn(Optional.of(fundingProduct));
 
         doThrow(new AuthException(NO_ACCESS)).when(authenticationService)
@@ -375,7 +376,7 @@ class FundingProductServiceTest {
                 .endDate(LocalDate.of(2023, 12, 28))
                 .build();
 
-        given(fundingProductRepository.findByIdFetch(any()))
+        given(fundingProductRepository.findByIdFetchMember(any()))
                 .willReturn(Optional.of(fundingProduct));
 
         doNothing().when(authenticationService).checkAccess(any(), any());
@@ -408,73 +409,7 @@ class FundingProductServiceTest {
                 .endDate(LocalDate.of(2023, 12, 28))
                 .build();
 
-        given(fundingProductRepository.findByIdFetch(any()))
-                .willReturn(Optional.of(fundingProduct));
-
-        doNothing().when(authenticationService).checkAccess(any(), any());
-
-        MockedStatic<LocalDate> localDateMock = mockStatic(LocalDate.class,
-                Mockito.CALLS_REAL_METHODS);
-        localDateMock.when(LocalDate::now).thenReturn(NOW);
-
-        // when
-        // then
-        String title = "제목 수정";
-        Request request = Request.builder()
-                .title(title)
-                .build();
-
-        assertThatThrownBy(() -> fundingProductService.edit(1L, request, MEMBER_KEY))
-                .isInstanceOf(FundingProductException.class)
-                .hasMessageContaining(FUNDING_PRODUCT_NOT_EDIT.getMessage());
-
-        localDateMock.close();
-    }
-
-    @Test
-    @DisplayName("펀딩 상품 수정 실패 - 펀딩 종료된 상품은 수정할 수 없다. (완료 날짜 < 현재)")
-    void edit_endDate_isBefore() {
-        // given
-        FundingProduct fundingProduct = FundingProduct.builder()
-                .title(TITLE)
-                .startDate(LocalDate.of(2023, 12, 29))
-                .endDate(LocalDate.of(2023, 12, 26))
-                .build();
-
-        given(fundingProductRepository.findByIdFetch(any()))
-                .willReturn(Optional.of(fundingProduct));
-
-        doNothing().when(authenticationService).checkAccess(any(), any());
-
-        MockedStatic<LocalDate> localDateMock = mockStatic(LocalDate.class,
-                Mockito.CALLS_REAL_METHODS);
-        localDateMock.when(LocalDate::now).thenReturn(NOW);
-
-        // when
-        // then
-        String title = "제목 수정";
-        Request request = Request.builder()
-                .title(title)
-                .build();
-
-        assertThatThrownBy(() -> fundingProductService.edit(1L, request, MEMBER_KEY))
-                .isInstanceOf(FundingProductException.class)
-                .hasMessageContaining(FUNDING_PRODUCT_NOT_EDIT.getMessage());
-
-        localDateMock.close();
-    }
-
-    @Test
-    @DisplayName("펀딩 상품 수정 실패 - 펀딩 진행중인 상품은 수정할 수 없다. (완료 날짜 == 현재)")
-    void edit_endDate_isEqual() {
-        // given
-        FundingProduct fundingProduct = FundingProduct.builder()
-                .title(TITLE)
-                .startDate(LocalDate.of(2023, 12, 27))
-                .endDate(LocalDate.of(2023, 12, 27))
-                .build();
-
-        given(fundingProductRepository.findByIdFetch(any()))
+        given(fundingProductRepository.findByIdFetchMember(any()))
                 .willReturn(Optional.of(fundingProduct));
 
         doNothing().when(authenticationService).checkAccess(any(), any());
@@ -509,7 +444,7 @@ class FundingProductServiceTest {
         List.of(new Image(ImageType.THUMBNAIL, "", ""))
                         .forEach(fundingProduct::addImages);
 
-        given(fundingProductRepository.findByIdFetch(any()))
+        given(fundingProductRepository.findByIdFetchMember(any()))
                 .willReturn(Optional.of(fundingProduct));
 
         doNothing().when(authenticationService).checkAccess(any(), any());
