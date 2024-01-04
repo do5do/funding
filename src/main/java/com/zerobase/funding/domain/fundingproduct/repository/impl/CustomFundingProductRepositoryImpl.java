@@ -2,6 +2,7 @@ package com.zerobase.funding.domain.fundingproduct.repository.impl;
 
 import static com.zerobase.funding.domain.fundingproduct.entity.QFundingProduct.fundingProduct;
 import static com.zerobase.funding.domain.member.entity.QMember.member;
+import static com.zerobase.funding.domain.reward.entity.QReward.reward;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -46,10 +47,19 @@ public class CustomFundingProductRepositoryImpl implements CustomFundingProductR
     }
 
     @Override
-    public Optional<FundingProduct> findByIdFetch(Long id) {
+    public Optional<FundingProduct> findByIdFetchMember(Long id) {
         return Optional.ofNullable(queryFactory
                 .selectFrom(fundingProduct)
                 .join(fundingProduct.member, member).fetchJoin()
+                .where(fundingProduct.id.eq(id), getEqNotDelete())
+                .fetchOne());
+    }
+
+    @Override
+    public Optional<FundingProduct> findByIdFetchReward(Long id) {
+        return Optional.ofNullable(queryFactory
+                .selectFrom(fundingProduct)
+                .join(fundingProduct.rewards, reward).fetchJoin()
                 .where(fundingProduct.id.eq(id), getEqNotDelete())
                 .fetchOne());
     }

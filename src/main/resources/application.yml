@@ -4,7 +4,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/funding?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/funding?characterEncoding=UTF-8&serverTimezone=Asia/Seoul&rewriteBatchedStatements=true
     username: root
     password: mysql
 
@@ -17,6 +17,10 @@ spring:
         format_sql: true
         show_sql: true
         default_batch_fetch_size: 500
+        jdbc:
+          batch_size: 1000
+        order_inserts: true
+        order_updates: true
     open-in-view: false
 
   data:
@@ -30,6 +34,12 @@ spring:
       location: /tmp/s3
       max-file-size: 2MB
       max-request-size: 12MB
+
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
 
 jwt:
   key: c3ByaW5nLWJvb3QtYXBpLWp3dC1zZWNyZXQta2V5LXN1cGVyLXNlY3JldC15ZXMteWVzLXllcy0yNAo=

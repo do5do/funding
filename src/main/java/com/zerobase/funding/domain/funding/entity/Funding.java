@@ -70,4 +70,8 @@ public class Funding extends BaseTimeEntity {
     public void addDelivery(Delivery delivery) {
         this.delivery = delivery;
     }
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }

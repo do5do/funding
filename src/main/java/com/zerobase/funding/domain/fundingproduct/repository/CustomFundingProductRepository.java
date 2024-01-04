@@ -10,5 +10,7 @@ public interface CustomFundingProductRepository {
 
     Slice<FundingProduct> findFundingProducts(Pageable pageable, SearchCondition searchCondition);
 
-    Optional<FundingProduct> findByIdFetch(Long id);
+    Optional<FundingProduct> findByIdFetchMember(Long id);
+
+    Optional<FundingProduct> findByIdFetchReward(Long id);
 }

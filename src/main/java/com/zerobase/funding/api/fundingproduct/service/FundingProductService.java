@@ -122,7 +122,7 @@ public class FundingProductService {
 
     @Transactional
     public Edit.Response edit(Long id, Edit.Request request, String memberKey) {
-        FundingProduct fundingProduct = fundingProductRepository.findByIdFetch(id)
+        FundingProduct fundingProduct = fundingProductRepository.findByIdFetchMember(id)
                 .orElseThrow(() -> new FundingProductException(FUNDING_PRODUCT_NOT_FOUND));
 
         authenticationService.checkAccess(memberKey, fundingProduct.getMember());
@@ -135,7 +135,7 @@ public class FundingProductService {
 
     @Transactional
     public void delete(Long id, String memberKey) {
-        FundingProduct fundingProduct = fundingProductRepository.findByIdFetch(id)
+        FundingProduct fundingProduct = fundingProductRepository.findByIdFetchMember(id)
                 .orElseThrow(() -> new FundingProductException(FUNDING_PRODUCT_NOT_FOUND));
 
         authenticationService.checkAccess(memberKey, fundingProduct.getMember());

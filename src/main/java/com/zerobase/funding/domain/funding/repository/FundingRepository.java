@@ -7,9 +7,9 @@ import com.zerobase.funding.domain.reward.entity.Reward;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FundingRepository extends JpaRepository<Funding, Long> {
+public interface FundingRepository extends JpaRepository<Funding, Long>, CustomFundingRepository {
 
-    List<Funding> findByRewardInAndStatus(List<Reward> rewards, Status status);
+    List<Funding> findAllByRewardInAndStatus(List<Reward> rewards, Status status);
 
     boolean existsByMemberAndReward(Member member, Reward reward);
 }

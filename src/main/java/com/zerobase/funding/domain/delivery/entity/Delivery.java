@@ -28,4 +28,8 @@ public class Delivery extends BaseTimeEntity {
     public Delivery(Status status) {
         this.status = status;
     }
+
+    public void updateStatus(Status status) {
+        this.status = status;
+    }
 }

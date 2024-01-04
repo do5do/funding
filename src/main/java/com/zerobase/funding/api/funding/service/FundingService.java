@@ -38,7 +38,7 @@ public class FundingService {
     private final RewardService rewardService;
 
     public List<Funding> getFundingByRewards(List<Reward> rewards) {
-        return fundingRepository.findByRewardInAndStatus(rewards, IN_PROGRESS);
+        return fundingRepository.findAllByRewardInAndStatus(rewards, IN_PROGRESS);
     }
 
     public Funding getFundingById(Long id) {
