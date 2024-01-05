@@ -17,17 +17,17 @@ import org.springframework.stereotype.Component;
 public class DistributedLockAspect {
 
     private final RedissonLockService redissonLockService;
+    private final LockCallNewTransaction lockCallNewTransaction;
 
     @Around("@annotation(com.zerobase.funding.api.lock.annotation.DistributedLock)")
     public Object lock(ProceedingJoinPoint joinPoint) throws Throwable {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         DistributedLock annotation = method.getAnnotation(DistributedLock.class);
-
         String key = getLockKey(joinPoint, annotation);
         redissonLockService.lock(key, annotation.waitTime(), annotation.leasTime());
 
         try {
-            return joinPoint.proceed();
+            return lockCallNewTransaction.proceed(joinPoint);
         } finally {
             redissonLockService.unlock(key);
         }

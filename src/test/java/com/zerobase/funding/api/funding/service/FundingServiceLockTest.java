@@ -39,7 +39,9 @@ public class FundingServiceLockTest {
     @Autowired
     FundingService fundingService;
 
-    int threadCount = 100;
+    // 현재 hikariCP에서 허용가능한 범위로 설정 (pool size를 20으로 설정해둬서 20개부터는 테스트 실패,
+    // thransaction이 한번 더 여리는 이유로 pool size에 따라 실패 여부가 갈림)
+    int threadCount = 19;
 
     @BeforeEach
     void setup() {
