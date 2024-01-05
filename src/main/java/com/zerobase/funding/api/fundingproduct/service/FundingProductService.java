@@ -113,7 +113,7 @@ public class FundingProductService {
         FundingProduct fundingProduct = fundingProductRepository.findByIdAndDeleted(id, false)
                 .orElseThrow(() -> new FundingProductException(FUNDING_PRODUCT_NOT_FOUND));
 
-        List<Funding> fundingList = fundingService.findByRewards(fundingProduct.getRewards());
+        List<Funding> fundingList = fundingService.getFundingByRewards(fundingProduct.getRewards());
 
         Integer views = viewsService.saveOrUpdate(String.valueOf(id), fundingProduct.getViews());
 

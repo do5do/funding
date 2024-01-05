@@ -1,0 +1,14 @@
+### create funding
+POST {{host}}/funding
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "fundingProductId": 1,
+  "rewardId": 2,
+  "address": {
+    "roadAddress": "부산시 대연동",
+    "addressDetail": "어쩌구 저쩌구",
+    "zipcode": "123-1"
+  }
+}

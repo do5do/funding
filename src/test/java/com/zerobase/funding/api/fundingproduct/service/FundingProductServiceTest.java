@@ -248,7 +248,7 @@ class FundingProductServiceTest {
         given(fundingProductRepository.findByIdAndDeleted(any(), anyBoolean()))
                 .willReturn(Optional.of(fundingProduct));
 
-        given(fundingService.findByRewards(any()))
+        given(fundingService.getFundingByRewards(any()))
                 .willReturn(List.of(Funding.builder().fundingPrice(70000).build(),
                         Funding.builder().fundingPrice(5800).build()));
 

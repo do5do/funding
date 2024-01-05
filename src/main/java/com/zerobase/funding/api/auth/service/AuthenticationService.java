@@ -8,10 +8,13 @@ import com.zerobase.funding.domain.member.entity.Member;
 import com.zerobase.funding.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class AuthenticationService {
+
     private final MemberRepository memberRepository;
 
     public Member getMemberOrThrow(String memberKey) {
@@ -23,5 +26,11 @@ public class AuthenticationService {
         if (!member.getMemberKey().equals(memberKey)) {
             throw new AuthException(NO_ACCESS);
         }
+    }
+
+    public void existsMemberOrThrow(String memberKey) {
+       if (!memberRepository.existsByMemberKey(memberKey)) {
+           throw new AuthException(MEMBER_NOT_FOUND);
+       }
     }
 }

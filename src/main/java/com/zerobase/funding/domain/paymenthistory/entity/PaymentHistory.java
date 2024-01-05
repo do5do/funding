@@ -10,6 +10,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -32,10 +33,21 @@ public class PaymentHistory extends BaseTimeEntity {
     private Integer paymentPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "funding_id")
     private Funding funding;
 
     public PaymentHistory(Status status, Integer paymentPrice) {
         this.status = status;
         this.paymentPrice = paymentPrice;
+    }
+
+    public void addFunding(Funding funding) {
+        this.funding = funding;
+    }
+
+    public static PaymentHistory of(Integer paymentPrice, Funding funding) {
+        PaymentHistory paymentHistory = new PaymentHistory(Status.COMPLETE, paymentPrice);
+        paymentHistory.addFunding(funding);
+        return paymentHistory;
     }
 }

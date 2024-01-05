@@ -1,0 +1,9 @@
+### approval result
+POST {{host}}/payment-history
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "fundingId": 1,
+  "amount": 35000
+}
