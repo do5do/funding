@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Slf4j
 @Transactional(readOnly = true)
@@ -47,9 +48,9 @@ public class FundingService {
     }
 
     @DistributedLock(keyPrefix = RedisKey.FUNDING_LOCK_PREFIX, idField = "rewardId")
-    @Transactional
     public CreateFunding.Response createFunding(CreateFunding.Request request,
             String memberKey) {
+        log.info("create funding {}", TransactionAspectSupport.currentTransactionStatus().hashCode());
         Member member = authenticationService.getMemberOrThrow(memberKey);
         Reward reward = rewardService.getRewardOrThrow(request.rewardId());
 
@@ -64,7 +65,7 @@ public class FundingService {
         funding.addReward(reward);
         funding.addDelivery(new Delivery(WAITING));
 
-        fundingRepository.saveAndFlush(funding);
+        fundingRepository.save(funding);
 
         return CreateFunding.Response.from(
                 reward.getTitle(), reward.getPrice(), funding.getId());

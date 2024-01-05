@@ -7,6 +7,8 @@ spring:
     url: jdbc:mysql://localhost:3306/funding?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: root
     password: mysql
+    hikari:
+      maximum-pool-size: 20
 
   jpa:
     database: mysql
@@ -38,10 +40,12 @@ scheduler:
   funding-product:
     views: "0 0 0 * * *"
 
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        security: DEBUG
-#        transaction:
-#          interceptor: TRACE
+logging:
+  level:
+    org:
+      springframework:
+#        security: debug
+        transaction:
+          interceptor: debug
+    com.zaxxer.hikari: trace
+    com.zaxxer.hikari.HikariConfig: debug
