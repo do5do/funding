@@ -8,6 +8,4 @@ import java.util.List;
 public interface CustomFundingRepository {
 
     List<Funding> findAllByRewardInAndStatusFetch(List<Reward> rewards, Status status);
-
-    List<Funding> findAllByRewardInFetch(List<Reward> rewards);
 }

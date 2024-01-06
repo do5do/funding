@@ -1,4 +1,4 @@
-package com.zerobase.funding.api.s3;
+package com.zerobase.funding.api.s3.service;
 
 import static com.zerobase.funding.api.exception.ErrorCode.INTERNAL_ERROR;
 

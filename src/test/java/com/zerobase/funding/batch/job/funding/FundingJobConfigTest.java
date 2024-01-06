@@ -84,11 +84,11 @@ class FundingJobConfigTest {
         FundingProduct successFundingProduct = fundingProductRepository.findByIdFetchReward(1L).get();
         FundingProduct failFundingProduct = fundingProductRepository.findByIdFetchReward(2L).get();
 
-        List<Funding> completeFundings = fundingRepository.findAllByRewardInFetch(
-                successFundingProduct.getRewards());
+        List<Funding> completeFundings = fundingRepository.findAllByRewardInAndStatusFetch(
+                successFundingProduct.getRewards(), null);
 
-        List<Funding> failFundings = fundingRepository.findAllByRewardInFetch(
-                failFundingProduct.getRewards());
+        List<Funding> failFundings = fundingRepository.findAllByRewardInAndStatusFetch(
+                failFundingProduct.getRewards(), null);
 
         List<PaymentHistory> paymentHistoryList = failFundings.stream()
                 .map(o -> paymentHistoryRepository.findByFunding(o).get()).toList();

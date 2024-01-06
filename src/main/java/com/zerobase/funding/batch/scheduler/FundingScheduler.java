@@ -29,7 +29,6 @@ public class FundingScheduler {
                 .toJobParameters();
 
         try {
-            log.info("run funding job");
             jobLauncher.run(fundingJobConfig.job(), jobParameters);
         } catch (JobExecutionAlreadyRunningException | JobRestartException |
                  JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {

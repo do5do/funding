@@ -38,7 +38,7 @@ import com.zerobase.funding.api.fundingproduct.dto.model.FundingProductDto;
 import com.zerobase.funding.api.fundingproduct.dto.model.RewardDto;
 import com.zerobase.funding.api.fundingproduct.exception.FundingProductException;
 import com.zerobase.funding.api.fundingproduct.type.FilterType;
-import com.zerobase.funding.api.s3.AwsS3Service;
+import com.zerobase.funding.api.s3.service.AwsS3Service;
 import com.zerobase.funding.api.s3.dto.S3FileDto;
 import com.zerobase.funding.common.builder.MemberBuilder;
 import com.zerobase.funding.common.constants.RewardConstants;

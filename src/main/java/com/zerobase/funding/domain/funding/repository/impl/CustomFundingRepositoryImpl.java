@@ -4,6 +4,7 @@ import static com.zerobase.funding.domain.delivery.entity.QDelivery.delivery;
 import static com.zerobase.funding.domain.funding.entity.QFunding.funding;
 import static com.zerobase.funding.domain.member.entity.QMember.member;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.zerobase.funding.domain.funding.entity.Funding;
 import com.zerobase.funding.domain.funding.entity.Status;
@@ -22,17 +23,11 @@ public class CustomFundingRepositoryImpl implements CustomFundingRepository {
         return queryFactory.selectFrom(funding)
                 .join(funding.member, member).fetchJoin()
                 .join(funding.delivery, delivery).fetchJoin()
-                .where(funding.reward.in(rewards),
-                        funding.status.eq(Status.IN_PROGRESS))
+                .where(funding.reward.in(rewards), statusEq(status))
                 .fetch();
     }
 
-    @Override
-    public List<Funding> findAllByRewardInFetch(List<Reward> rewards) {
-        return queryFactory.selectFrom(funding)
-                .join(funding.member, member).fetchJoin()
-                .join(funding.delivery, delivery).fetchJoin()
-                .where(funding.reward.in(rewards))
-                .fetch();
+    private BooleanExpression statusEq(Status status) {
+        return status != null ? funding.status.eq(status) : null;
     }
 }
