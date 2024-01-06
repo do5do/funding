@@ -25,7 +25,6 @@ public class FundingScheduler {
     @Scheduled(cron = "${scheduler.batch.funding}")
     public void runFundingJob() {
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("test", "test")
                 .addDate("date", new Date())
                 .toJobParameters();
 
