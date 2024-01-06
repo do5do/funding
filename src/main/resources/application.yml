@@ -50,12 +50,15 @@ scheduler:
   funding-product:
     views: "0 0 0 * * *"
 
+sse:
+  timeout: 60000
+
 logging:
   level:
     org:
       springframework:
 #        security: debug
-        transaction:
-          interceptor: debug
-    com.zaxxer.hikari: trace
-    com.zaxxer.hikari.HikariConfig: debug
+#        transaction:
+#          interceptor: debug
+#    com.zaxxer.hikari: trace
+#    com.zaxxer.hikari.HikariConfig: debug

@@ -141,7 +141,7 @@ class FundingJobConfigTest {
                     .build();
 
             funding.addMember(member);
-            funding.addDelivery(new Delivery(WAITING));
+            funding.addDelivery(Delivery.of(WAITING));
             fundings.add(funding);
         }
 

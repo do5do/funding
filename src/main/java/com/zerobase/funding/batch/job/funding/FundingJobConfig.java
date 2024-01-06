@@ -10,6 +10,10 @@ import com.zerobase.funding.batch.constants.BeanPrefix;
 import com.zerobase.funding.domain.funding.entity.Funding;
 import com.zerobase.funding.domain.funding.repository.FundingRepository;
 import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
+import com.zerobase.funding.domain.paymenthistory.entity.Status;
+import com.zerobase.funding.domain.paymenthistory.repository.PaymentHistoryRepository;
+import com.zerobase.funding.notification.constants.MsgFormat;
+import com.zerobase.funding.notification.service.NotificationService;
 import jakarta.persistence.EntityManagerFactory;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -43,8 +47,11 @@ public class FundingJobConfig {
     private final PlatformTransactionManager transactionManager;
     private final EntityManagerFactory entityManagerFactory;
     private final FundingRepository fundingRepository;
+    private final PaymentHistoryRepository paymentHistoryRepository;
+    private final NotificationService notificationService;
 
     private static final Integer CHUNK_SIZE = 100;
+    private static final String SSE_NAME = "funding-ended";
 
     @Bean(name = BeanPrefix.FUNDING_ENDED + "Job")
     public Job job() {
@@ -93,13 +100,22 @@ public class FundingJobConfig {
                 fundingList.forEach(funding -> {
                     funding.updateStatus(COMPLETE);
                     funding.getDelivery().updateStatus(SHIPPING);
-                    // todo 알림 발송
+
+                    notificationService.sendMessage(funding.getId(),
+                            String.format(MsgFormat.FUNDING_SUCCESS, fundingProduct.getTitle()),
+                            SSE_NAME);
                 });
             } else { // 펀딩 실패
                 fundingList.forEach(funding -> {
                     funding.updateStatus(FAIL);
                     funding.getDelivery().updateStatus(CANCEL);
-                    // todo 알림 발송
+
+                    paymentHistoryRepository.findByFunding(funding)
+                            .ifPresent(o -> o.updateStatus(Status.CANCEL));
+
+                    notificationService.sendMessage(funding.getId(),
+                            String.format(MsgFormat.FUNDING_FAIL, fundingProduct.getTitle()),
+                            SSE_NAME);
                 });
             }
 

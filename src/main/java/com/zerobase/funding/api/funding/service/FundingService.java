@@ -63,7 +63,7 @@ public class FundingService {
         Funding funding = request.toEntity(reward.getPrice());
         funding.addMember(member);
         funding.addReward(reward);
-        funding.addDelivery(new Delivery(WAITING));
+        funding.addDelivery(Delivery.of(WAITING));
 
         fundingRepository.save(funding);
 

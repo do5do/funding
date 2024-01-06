@@ -1,5 +1,7 @@
 package com.zerobase.funding.domain.paymenthistory.entity;
 
+import static com.zerobase.funding.domain.paymenthistory.entity.Status.*;
+
 import com.zerobase.funding.domain.common.entity.BaseTimeEntity;
 import com.zerobase.funding.domain.funding.entity.Funding;
 import jakarta.persistence.Column;
@@ -46,8 +48,12 @@ public class PaymentHistory extends BaseTimeEntity {
     }
 
     public static PaymentHistory of(Integer paymentPrice, Funding funding) {
-        PaymentHistory paymentHistory = new PaymentHistory(Status.COMPLETE, paymentPrice);
+        PaymentHistory paymentHistory = new PaymentHistory(COMPLETE, paymentPrice);
         paymentHistory.addFunding(funding);
         return paymentHistory;
+    }
+
+    public void updateStatus(Status status) {
+        this.status = status;
     }
 }
