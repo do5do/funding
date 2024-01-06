@@ -8,7 +8,6 @@ import static com.zerobase.funding.domain.funding.entity.Status.COMPLETE;
 import static com.zerobase.funding.domain.funding.entity.Status.FAIL;
 import static com.zerobase.funding.domain.funding.entity.Status.IN_PROGRESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.zerobase.funding.domain.delivery.entity.Delivery;
@@ -19,6 +18,9 @@ import com.zerobase.funding.domain.fundingproduct.repository.FundingProductRepos
 import com.zerobase.funding.domain.member.entity.Member;
 import com.zerobase.funding.domain.member.entity.Role;
 import com.zerobase.funding.domain.member.repository.MemberRepository;
+import com.zerobase.funding.domain.paymenthistory.entity.PaymentHistory;
+import com.zerobase.funding.domain.paymenthistory.entity.Status;
+import com.zerobase.funding.domain.paymenthistory.repository.PaymentHistoryRepository;
 import com.zerobase.funding.domain.reward.entity.Reward;
 import com.zerobase.funding.domain.reward.repository.RewardRepository;
 import java.time.LocalDate;
@@ -56,6 +58,9 @@ class FundingJobConfigTest {
     @Autowired
     MemberRepository memberRepository;
 
+    @Autowired
+    PaymentHistoryRepository paymentHistoryRepository;
+
     List<Reward> rewards = new ArrayList<>();
 
     @BeforeEach
@@ -85,12 +90,17 @@ class FundingJobConfigTest {
         List<Funding> failFundings = fundingRepository.findAllByRewardInFetch(
                 failFundingProduct.getRewards());
 
+        List<PaymentHistory> paymentHistoryList = failFundings.stream()
+                .map(o -> paymentHistoryRepository.findByFunding(o).get()).toList();
+
         // 상태 검증
         assertTrue(completeFundings.stream().allMatch(o -> o.getStatus() == COMPLETE));
         assertTrue(failFundings.stream().allMatch(o -> o.getStatus() == FAIL));
 
-        assertFalse(completeFundings.stream().anyMatch(o -> o.getDelivery().getStatus() != SHIPPING));
-        assertFalse(failFundings.stream().anyMatch(o -> o.getDelivery().getStatus() != CANCEL));
+        assertTrue(completeFundings.stream().allMatch(o -> o.getDelivery().getStatus() == SHIPPING));
+        assertTrue(failFundings.stream().allMatch(o -> o.getDelivery().getStatus() == CANCEL));
+
+        assertTrue(paymentHistoryList.stream().allMatch(o -> o.getStatus() == Status.CANCEL));
 
         assertEquals(6, completeFundings.size());
         assertEquals(4, failFundings.size());
@@ -152,6 +162,7 @@ class FundingJobConfigTest {
             idx++;
 
             fundingRepository.save(funding);
+            paymentHistoryRepository.save(PaymentHistory.of(10000, funding));
 
             if (idx > rewards.size() - 1) {
                 idx = 0;
