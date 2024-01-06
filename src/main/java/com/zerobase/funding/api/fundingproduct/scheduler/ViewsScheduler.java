@@ -18,7 +18,7 @@ public class ViewsScheduler {
     private final ViewsService viewsService;
     private final FundingProductBatchRepository fundingProductBatchRepository;
 
-    @Scheduled(cron = "${scheduler.funding-product.views}")
+    @Scheduled(cron = "${scheduler.api.funding-product.views}")
     @Transactional
     public void updateViews() { // 하루에 한번 조회수 업데이트 (redis -> db)
         long start = System.currentTimeMillis();

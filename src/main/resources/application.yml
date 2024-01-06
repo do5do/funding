@@ -47,8 +47,11 @@ jwt:
   key: c3ByaW5nLWJvb3QtYXBpLWp3dC1zZWNyZXQta2V5LXN1cGVyLXNlY3JldC15ZXMteWVzLXllcy0yNAo=
 
 scheduler:
-  funding-product:
-    views: "0 0 0 * * *"
+  api:
+    funding-product:
+      views: "0 0 0 * * *"
+  batch:
+    funding: "0 0 0 * * *"
 
 sse:
   timeout: 60000

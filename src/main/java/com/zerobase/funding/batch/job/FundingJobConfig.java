@@ -1,4 +1,4 @@
-package com.zerobase.funding.batch.job.funding;
+package com.zerobase.funding.batch.job;
 
 import static com.zerobase.funding.domain.delivery.entity.Status.CANCEL;
 import static com.zerobase.funding.domain.delivery.entity.Status.SHIPPING;
