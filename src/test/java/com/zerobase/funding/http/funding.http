@@ -12,3 +12,7 @@ Authorization: {{token}}
     "zipcode": "123-1"
   }
 }
+
+### predicated fundings
+GET {{host}}/funding?yearMonth=2023-01
+Authorization: {{token}}
