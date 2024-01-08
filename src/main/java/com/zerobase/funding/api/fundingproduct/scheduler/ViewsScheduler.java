@@ -18,14 +18,19 @@ public class ViewsScheduler {
     private final ViewsService viewsService;
     private final FundingProductBatchRepository fundingProductBatchRepository;
 
-    @Scheduled(cron = "${scheduler.funding-product.views}")
+    @Scheduled(cron = "${scheduler.api.funding-product.views}")
     @Transactional
     public void updateViews() { // 하루에 한번 조회수 업데이트 (redis -> db)
         long start = System.currentTimeMillis();
-        log.info("start scheduling -> update fundingProduct(views).");
+        log.info("[scheduling] update fundingProduct views.");
         List<Views> views = viewsService.findAll();
 
-        fundingProductBatchRepository.updateAll(views);
-        log.info("update fundingProduct(views) finished {}ms", System.currentTimeMillis() - start);
+        if (!views.isEmpty()) {
+            fundingProductBatchRepository.updateAll(views);
+            log.info("update fundingProduct views finished. {} ms",
+                    System.currentTimeMillis() - start);
+        } else {
+            log.info("nothing changed");
+        }
     }
 }

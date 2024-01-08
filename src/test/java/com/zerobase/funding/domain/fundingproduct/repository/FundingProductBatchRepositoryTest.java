@@ -1,10 +1,8 @@
-package com.zerobase.funding.api.fundingproduct.repository;
+package com.zerobase.funding.domain.fundingproduct.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
-import com.zerobase.funding.domain.fundingproduct.repository.FundingProductBatchRepository;
-import com.zerobase.funding.domain.fundingproduct.repository.FundingProductRepository;
 import com.zerobase.funding.domain.redis.entity.Views;
 import com.zerobase.funding.domain.redis.repository.ViewsRepository;
 import java.time.LocalDate;

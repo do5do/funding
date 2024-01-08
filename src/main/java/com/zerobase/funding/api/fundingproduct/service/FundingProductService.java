@@ -14,7 +14,7 @@ import com.zerobase.funding.api.fundingproduct.dto.RegistrationRequest;
 import com.zerobase.funding.api.fundingproduct.dto.SearchCondition;
 import com.zerobase.funding.api.fundingproduct.dto.model.FundingProductDto;
 import com.zerobase.funding.api.fundingproduct.exception.FundingProductException;
-import com.zerobase.funding.api.s3.AwsS3Service;
+import com.zerobase.funding.api.s3.service.AwsS3Service;
 import com.zerobase.funding.api.s3.dto.S3FileDto;
 import com.zerobase.funding.domain.funding.entity.Funding;
 import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
@@ -122,7 +122,7 @@ public class FundingProductService {
 
     @Transactional
     public Edit.Response edit(Long id, Edit.Request request, String memberKey) {
-        FundingProduct fundingProduct = fundingProductRepository.findByIdFetch(id)
+        FundingProduct fundingProduct = fundingProductRepository.findByIdFetchMember(id)
                 .orElseThrow(() -> new FundingProductException(FUNDING_PRODUCT_NOT_FOUND));
 
         authenticationService.checkAccess(memberKey, fundingProduct.getMember());
@@ -135,7 +135,7 @@ public class FundingProductService {
 
     @Transactional
     public void delete(Long id, String memberKey) {
-        FundingProduct fundingProduct = fundingProductRepository.findByIdFetch(id)
+        FundingProduct fundingProduct = fundingProductRepository.findByIdFetchMember(id)
                 .orElseThrow(() -> new FundingProductException(FUNDING_PRODUCT_NOT_FOUND));
 
         authenticationService.checkAccess(memberKey, fundingProduct.getMember());

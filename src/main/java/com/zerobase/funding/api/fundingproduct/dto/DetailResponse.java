@@ -19,7 +19,7 @@ public class DetailResponse {
 
     private FundingProductDto fundingProduct;
     private Integer remainingDays; // 남은 일수
-    private Long totalAmount; // 모인 금액
+    private Integer totalAmount; // 모인 금액
     private Integer completionPercent; // 달성 퍼센트
     private Integer donorCount; // 후원자 수
 
@@ -35,11 +35,9 @@ public class DetailResponse {
 
     public void setProperties(List<Funding> fundingList) {
         remainingDays = Period.between(LocalDate.now(), fundingProduct.endDate()).getDays();
-        totalAmount = fundingList.stream()
-                .mapToLong(Funding::getFundingPrice)
-                .sum();
+        donorCount = fundingList.size();
+        totalAmount = this.donorCount * fundingList.get(0).getFundingPrice();
         completionPercent = Math.toIntExact(
                 Math.round((float) totalAmount / fundingProduct.targetAmount() * 100));
-        donorCount = fundingList.size();
     }
 }

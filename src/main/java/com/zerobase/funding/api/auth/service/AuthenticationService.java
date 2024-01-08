@@ -27,10 +27,4 @@ public class AuthenticationService {
             throw new AuthException(NO_ACCESS);
         }
     }
-
-    public void existsMemberOrThrow(String memberKey) {
-       if (!memberRepository.existsByMemberKey(memberKey)) {
-           throw new AuthException(MEMBER_NOT_FOUND);
-       }
-    }
 }

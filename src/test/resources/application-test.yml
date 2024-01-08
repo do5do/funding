@@ -14,9 +14,20 @@ spring:
         show_sql: true
         format_sql: true
         default_batch_fetch_size: 3
+        jdbc:
+          batch_size: 10
+        order_inserts: true
+        order_updates: true
     open-in-view: false
+    defer-datasource-initialization: true
 
   data:
     redis:
       port: 6379
       host: localhost
+
+  batch:
+    job:
+      enabled: true
+    jdbc:
+      initialize-schema: always

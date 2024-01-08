@@ -1,9 +1,5 @@
 package com.zerobase.funding.api.member.controller;
 
-import static com.zerobase.funding.common.constants.MemberConstants.EMAIL;
-import static com.zerobase.funding.common.constants.MemberConstants.MEMBER_KEY;
-import static com.zerobase.funding.common.constants.MemberConstants.NAME;
-import static com.zerobase.funding.common.constants.MemberConstants.PROFILE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -15,8 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerobase.funding.api.auth.jwt.TokenProvider;
 import com.zerobase.funding.api.member.dto.MemberEditRequest;
+import com.zerobase.funding.api.member.dto.model.AddressDto;
+import com.zerobase.funding.api.member.dto.model.MemberDto;
 import com.zerobase.funding.api.member.service.MemberService;
-import com.zerobase.funding.common.builder.MemberDtoBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,31 +51,43 @@ class MemberControllerTest {
                 .build();
     }
 
+    static final String memberKey = "key";
+    String name = "name";
+    String email = "do@gmail.com";
+    String profile = "profile";
+
+    MemberDto memberDto = MemberDto.builder()
+            .name(name)
+            .email(email)
+            .profile(profile)
+            .address(AddressDto.builder().build())
+            .build();
+
     @Test
-    @WithMockUser(username = MEMBER_KEY)
+    @WithMockUser(username = memberKey)
     @DisplayName("회원 정보 조회")
     void memberInfo() throws Exception {
         // given
         given(memberService.memberInfo(any()))
-                .willReturn(MemberDtoBuilder.memberDto());
+                .willReturn(memberDto);
 
         // when
         // then
         mockMvc.perform(get("/members"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(NAME))
-                .andExpect(jsonPath("$.email").value(EMAIL))
-                .andExpect(jsonPath("$.profile").value(PROFILE))
+                .andExpect(jsonPath("$.name").value(name))
+                .andExpect(jsonPath("$.email").value(email))
+                .andExpect(jsonPath("$.profile").value(profile))
                 .andDo(print());
     }
 
     @Test
-    @WithMockUser(username = MEMBER_KEY)
+    @WithMockUser(username = memberKey)
     @DisplayName("회원 정보 수정")
     void memberEdit() throws Exception {
         // given
         given(memberService.memberEdit(any(), any()))
-                .willReturn(MemberDtoBuilder.memberDto());
+                .willReturn(memberDto);
 
         // when
         // then
@@ -88,9 +97,9 @@ class MemberControllerTest {
                                 new MemberEditRequest("dohee", null)
                         )))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(NAME))
-                .andExpect(jsonPath("$.email").value(EMAIL))
-                .andExpect(jsonPath("$.profile").value(PROFILE))
+                .andExpect(jsonPath("$.name").value(name))
+                .andExpect(jsonPath("$.email").value(email))
+                .andExpect(jsonPath("$.profile").value(profile))
                 .andDo(print());
     }
 }

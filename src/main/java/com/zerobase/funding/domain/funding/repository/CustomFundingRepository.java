@@ -4,12 +4,13 @@ import com.zerobase.funding.domain.funding.entity.Funding;
 import com.zerobase.funding.domain.funding.entity.Status;
 import com.zerobase.funding.domain.member.entity.Member;
 import com.zerobase.funding.domain.reward.entity.Reward;
+import java.time.LocalDateTime;
 import java.util.List;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FundingRepository extends JpaRepository<Funding, Long>, CustomFundingRepository {
+public interface CustomFundingRepository {
 
-    List<Funding> findAllByRewardInAndStatus(List<Reward> rewards, Status status);
+    List<Funding> findAllByRewardInAndStatusFetch(List<Reward> rewards, Status status);
 
-    boolean existsByMemberAndReward(Member member, Reward reward);
+    List<Funding> findAllByMemberPerMonthFetch(Member member, LocalDateTime startDateTime,
+            LocalDateTime endDateTime);
 }

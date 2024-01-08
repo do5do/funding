@@ -1,0 +1,3 @@
+### sse subscribe
+GET {{host}}/notification/subscribe/1
+Authorization: {{token}}
