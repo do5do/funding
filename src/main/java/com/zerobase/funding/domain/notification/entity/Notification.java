@@ -30,7 +30,7 @@ public class Notification extends BaseTimeEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private EventType eventType;
+    private NotificationType notificationType;
 
     private String relatedUri;
 
@@ -43,9 +43,9 @@ public class Notification extends BaseTimeEntity {
     private Member member; // receiver
 
     @Builder
-    public Notification(String message, EventType eventType, String relatedUri) {
+    public Notification(String message, NotificationType notificationType, String relatedUri) {
         this.message = message;
-        this.eventType = eventType;
+        this.notificationType = notificationType;
         this.relatedUri = relatedUri;
     }
 

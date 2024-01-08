@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum EventType {
+public enum NotificationType {
     FUNDING_ENDED("펀딩 종료 시점 알림");
 
     private final String description;
