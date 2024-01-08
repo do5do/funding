@@ -1,6 +1,5 @@
 package com.zerobase.funding.api.auth.controller;
 
-import static com.zerobase.funding.common.constants.MemberConstants.MEMBER_KEY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -43,7 +42,7 @@ class AuthControllerTest {
     }
 
     @Test
-    @WithMockUser(username = MEMBER_KEY)
+    @WithMockUser(username = "name")
     @DisplayName("로그아웃 처리 - refresh 토큰 삭제")
     void logout() throws Exception {
         // given

@@ -1,4 +1,4 @@
-package com.zerobase.funding.api.fundingproduct.repository;
+package com.zerobase.funding.domain.fundingproduct.repository.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -6,11 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.zerobase.funding.api.fundingproduct.dto.SearchCondition;
 import com.zerobase.funding.api.fundingproduct.type.FilterType;
 import com.zerobase.funding.api.fundingproduct.type.SortType;
-import com.zerobase.funding.common.builder.MemberBuilder;
 import com.zerobase.funding.config.TestQuerydslConfig;
 import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
 import com.zerobase.funding.domain.fundingproduct.repository.FundingProductRepository;
 import com.zerobase.funding.domain.member.entity.Member;
+import com.zerobase.funding.domain.member.entity.Role;
 import com.zerobase.funding.domain.member.repository.MemberRepository;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ import org.springframework.test.context.ActiveProfiles;
 @DataJpaTest
 @ActiveProfiles("test")
 @Import(TestQuerydslConfig.class)
-public class FundingProductRepositoryTest {
+class CustomFundingProductRepositoryImplTest {
 
     @Autowired
     FundingProductRepository fundingProductRepository;
@@ -36,7 +36,13 @@ public class FundingProductRepositoryTest {
 
     @BeforeEach
     void setup() {
-        Member member = memberRepository.save(MemberBuilder.member());
+        Member member = memberRepository.save(Member.builder()
+                .name("aa")
+                .email("test@gmail.com")
+                .profile("bbb")
+                .role(Role.USER)
+                .memberKey("key")
+                .build());
 
         for (int i = 0; i < 3; i++) {
             FundingProduct fundingProduct = FundingProduct.builder()
