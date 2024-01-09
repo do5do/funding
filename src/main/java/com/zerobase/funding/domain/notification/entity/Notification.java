@@ -14,9 +14,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Notification extends BaseTimeEntity {
@@ -36,7 +38,7 @@ public class Notification extends BaseTimeEntity {
 
     @Column(nullable = false)
     @ColumnDefault("false")
-    private boolean read = false;
+    private boolean isRead = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -49,11 +51,16 @@ public class Notification extends BaseTimeEntity {
         this.relatedUri = relatedUri;
     }
 
+    public static Notification of(String message, NotificationType notificationType,
+            String relatedUri) {
+        return new Notification(message, notificationType, relatedUri);
+    }
+
     public void addMember(Member member) {
         this.member = member;
     }
 
     public void setRead() {
-        this.read = true;
+        this.isRead = true;
     }
 }

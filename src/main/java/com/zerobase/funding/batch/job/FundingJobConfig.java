@@ -10,10 +10,12 @@ import com.zerobase.funding.batch.constants.BeanPrefix;
 import com.zerobase.funding.domain.funding.entity.Funding;
 import com.zerobase.funding.domain.funding.repository.FundingRepository;
 import com.zerobase.funding.domain.fundingproduct.entity.FundingProduct;
+import com.zerobase.funding.domain.notification.entity.NotificationType;
 import com.zerobase.funding.domain.paymenthistory.entity.Status;
 import com.zerobase.funding.domain.paymenthistory.repository.PaymentHistoryRepository;
 import com.zerobase.funding.notification.constants.MsgFormat;
-import com.zerobase.funding.notification.service.NotificationService;
+import com.zerobase.funding.notification.event.NotificationEvent;
+import com.zerobase.funding.notification.event.NotificationEventPublisher;
 import jakarta.persistence.EntityManagerFactory;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -48,10 +50,9 @@ public class FundingJobConfig {
     private final EntityManagerFactory entityManagerFactory;
     private final FundingRepository fundingRepository;
     private final PaymentHistoryRepository paymentHistoryRepository;
-    private final NotificationService notificationService;
+    private final NotificationEventPublisher notificationEventPublisher;
 
     private static final Integer CHUNK_SIZE = 100;
-    private static final String SSE_NAME = "funding-ended";
 
     @Bean(name = BeanPrefix.FUNDING_ENDED + "Job")
     public Job job() {
@@ -94,16 +95,16 @@ public class FundingJobConfig {
             List<Funding> fundingList = fundingRepository.findAllByRewardInAndStatusFetch(
                     fundingProduct.getRewards(), IN_PROGRESS);
 
-            int totalAmount = fundingList.size() * fundingList.get(0).getFundingPrice();
+            int totalAmount = !fundingList.isEmpty() ?
+                    fundingList.size() * fundingList.get(0).getFundingPrice() : 0;
 
             if (totalAmount >= fundingProduct.getTargetAmount()) { // 펀딩 성공
                 fundingList.forEach(funding -> {
                     funding.updateStatus(COMPLETE);
                     funding.getDelivery().updateStatus(SHIPPING);
 
-                    notificationService.sendMessage(funding.getId(),
-                            String.format(MsgFormat.FUNDING_SUCCESS, fundingProduct.getTitle()),
-                            SSE_NAME);
+                    publishNotification(funding.getMember().getMemberKey(),
+                            MsgFormat.FUNDING_SUCCESS, fundingProduct);
                 });
             } else { // 펀딩 실패
                 fundingList.forEach(funding -> {
@@ -113,14 +114,24 @@ public class FundingJobConfig {
                     paymentHistoryRepository.findByFunding(funding)
                             .ifPresent(o -> o.updateStatus(Status.CANCEL));
 
-                    notificationService.sendMessage(funding.getId(),
-                            String.format(MsgFormat.FUNDING_FAIL, fundingProduct.getTitle()),
-                            SSE_NAME);
+                    publishNotification(funding.getMember().getMemberKey(),
+                            MsgFormat.FUNDING_FAIL, fundingProduct);
                 });
             }
 
             return fundingList;
         };
+    }
+
+    private void publishNotification(String memberKey, String msgFormat,
+            FundingProduct fundingProduct) {
+        notificationEventPublisher.publishEvent(
+                NotificationEvent.builder()
+                        .memberKey(memberKey)
+                        .message(String.format(msgFormat, fundingProduct.getTitle()))
+                        .notificationType(NotificationType.FUNDING_ENDED)
+                        .relatedUri("/funding-products/" + fundingProduct.getId())
+                        .build());
     }
 
     @Bean(name = BeanPrefix.FUNDING_ENDED + "Writer")
