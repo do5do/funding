@@ -37,6 +37,9 @@ public enum ErrorCode {
     // payment history
     INVALID_PAYMENT(BAD_REQUEST, "결제 정보가 일치하지 않습니다."),
 
+    // notification
+    NOTIFICATION_NOT_FOUND(NOT_FOUND, "알림을 찾을 수 없습니다."),
+
     // global
     RESOURCE_LOCKED(LOCKED, "자원이 잠겨있어 접근할 수 없습니다."),
     NO_ACCESS(FORBIDDEN, "접근 권한이 없습니다."),

@@ -18,6 +18,8 @@ import com.zerobase.funding.domain.fundingproduct.repository.FundingProductRepos
 import com.zerobase.funding.domain.member.entity.Member;
 import com.zerobase.funding.domain.member.entity.Role;
 import com.zerobase.funding.domain.member.repository.MemberRepository;
+import com.zerobase.funding.domain.notification.entity.Notification;
+import com.zerobase.funding.domain.notification.repository.NotificationRepository;
 import com.zerobase.funding.domain.paymenthistory.entity.PaymentHistory;
 import com.zerobase.funding.domain.paymenthistory.entity.Status;
 import com.zerobase.funding.domain.paymenthistory.repository.PaymentHistoryRepository;
@@ -61,6 +63,9 @@ class FundingJobConfigTest {
     @Autowired
     PaymentHistoryRepository paymentHistoryRepository;
 
+    @Autowired
+    NotificationRepository notificationRepository;
+
     List<Reward> rewards = new ArrayList<>();
 
     @BeforeEach
@@ -93,6 +98,8 @@ class FundingJobConfigTest {
         List<PaymentHistory> paymentHistoryList = failFundings.stream()
                 .map(o -> paymentHistoryRepository.findByFunding(o).get()).toList();
 
+        List<Notification> notifications = notificationRepository.findAll();
+
         // 상태 검증
         assertTrue(completeFundings.stream().allMatch(o -> o.getStatus() == COMPLETE));
         assertTrue(failFundings.stream().allMatch(o -> o.getStatus() == FAIL));
@@ -104,6 +111,7 @@ class FundingJobConfigTest {
 
         assertEquals(6, completeFundings.size());
         assertEquals(4, failFundings.size());
+        assertEquals(10, notifications.size());
     }
 
     private void saveFundingProducts() {

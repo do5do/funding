@@ -14,7 +14,7 @@ Content-Type: application/json
   "title": "나무를 닮은 칫솔,<TWIG 트위그>",
   "description": "나무를 닮은 칫솔 TWIG(트위그), 지속 가능한 내일을 생각합니다.",
   "startDate": "2023-12-29",
-  "endDate": "2024-01-08",
+  "endDate": "2024-01-09",
   "targetAmount": 500000,
   "rewards": [
     {

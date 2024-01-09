@@ -36,7 +36,7 @@ public class DetailResponse {
     public void setProperties(List<Funding> fundingList) {
         remainingDays = Period.between(LocalDate.now(), fundingProduct.endDate()).getDays();
         donorCount = fundingList.size();
-        totalAmount = this.donorCount * fundingList.get(0).getFundingPrice();
+        totalAmount = donorCount > 0 ? donorCount * fundingList.get(0).getFundingPrice() : 0;
         completionPercent = Math.toIntExact(
                 Math.round((float) totalAmount / fundingProduct.targetAmount() * 100));
     }
