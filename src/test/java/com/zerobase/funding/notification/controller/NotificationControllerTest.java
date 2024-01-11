@@ -55,8 +55,12 @@ class NotificationControllerTest {
     }
 
     String uri = "/notification";
-    NotificationDto notificationDto = new NotificationDto("test", FUNDING_ENDED,
-            "relatedUri", false);
+    NotificationDto notificationDto = NotificationDto.builder()
+            .message("test")
+            .notificationType(FUNDING_ENDED)
+            .relatedUri("relatedUri")
+            .isRead(false)
+            .build();
 
     @Test
     @DisplayName("SSE 구독하기")
@@ -70,7 +74,7 @@ class NotificationControllerTest {
                 .id(id)
                 .data(notificationDto, MediaType.APPLICATION_JSON));
 
-        given(notificationService.subscribe(any(), any()))
+        given(notificationService.subscribe(any()))
                 .willReturn(sseEmitter);
 
         // when

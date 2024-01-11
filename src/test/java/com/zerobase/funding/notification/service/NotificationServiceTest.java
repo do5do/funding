@@ -20,12 +20,10 @@ import com.zerobase.funding.domain.notification.entity.Notification;
 import com.zerobase.funding.domain.notification.entity.NotificationType;
 import com.zerobase.funding.domain.notification.repository.NotificationRepository;
 import com.zerobase.funding.notification.dto.NotificationDto;
+import com.zerobase.funding.notification.event.NotificationEvent;
 import com.zerobase.funding.notification.exception.NotificationException;
-import com.zerobase.funding.notification.repository.SseEmitterRepository;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -40,7 +38,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 class NotificationServiceTest {
 
     @Mock
-    SseEmitterRepository sseEmitterRepository;
+    SseEmitterService sseEmitterService;
 
     @Mock
     AuthenticationService authenticationService;
@@ -48,57 +46,42 @@ class NotificationServiceTest {
     @Mock
     NotificationRepository notificationRepository;
 
+    @Mock
+    RedisMessageService redisMessageService;
+
     @InjectMocks
     NotificationService notificationService;
 
     String memberKey = "key";
 
-    @Nested
-    @DisplayName("SSE 구독 메서드")
-    class SubscribeMethod {
+    @Test
+    @DisplayName("SSE 구독 성공")
+    void subscribe() {
+        // given
+        given(sseEmitterService.createEmitter(any()))
+                .willReturn(new SseEmitter());
 
-        @Test
-        @DisplayName("성공 - lastEventId가 null인 경우")
-        void subscribe() {
-            // given
-            given(sseEmitterRepository.saveEmitter(any(), any()))
-                    .willReturn(new SseEmitter());
+        doNothing().when(sseEmitterService).send(any(), any(), any());
+        doNothing().when(redisMessageService).subscribe(any());
 
-            // when
-            // then
-            assertDoesNotThrow(() -> notificationService.subscribe(memberKey, null));
-        }
-
-        @Test
-        @DisplayName("성공 - lastEventId가 있고 캐시 이벤트가 경우")
-        void subscribe_lastEventId() {
-            // given
-            given(sseEmitterRepository.saveEmitter(any(), any()))
-                    .willReturn(new SseEmitter());
-
-            HashMap<String, Object> cached = new HashMap<>();
-            cached.put(memberKey, new NotificationDto("test", FUNDING_ENDED,
-                    "relatedUri", false));
-
-            given(sseEmitterRepository.findAllCachedEventsGtLastEventId(any(), any()))
-                    .willReturn(cached);
-
-            doNothing().when(sseEmitterRepository).deleteCachedEvent(any());
-
-            // when
-            // then
-            assertDoesNotThrow(() ->
-                    notificationService.subscribe(memberKey, "lastId"));
-        }
+        // when
+        // then
+        assertDoesNotThrow(() -> notificationService.subscribe(memberKey));
     }
 
     @Nested
-    @DisplayName("알림 발송 메서드")
-    class SendNotificationMethod {
+    @DisplayName("알림 이벤트 메서드")
+    class handleNotificationMethod {
 
         String message = "message";
         NotificationType notificationType = FUNDING_ENDED;
         String relatedUri = "/endpoint/1";
+        NotificationEvent notificationEvent = NotificationEvent.builder()
+                .memberKey(memberKey)
+                .message(message)
+                .notificationType(notificationType)
+                .relatedUri(relatedUri)
+                .build();
 
         @Test
         @DisplayName("성공")
@@ -110,19 +93,12 @@ class NotificationServiceTest {
             given(notificationRepository.save(any()))
                     .willReturn(Notification.of(message, notificationType, relatedUri));
 
-            doNothing().when(sseEmitterRepository).saveCacheEvent(any(), any());
-
-            Map<String, SseEmitter> emitters = new HashMap<>() {{
-                put(memberKey, new SseEmitter());
-            }};
-
-            given(sseEmitterRepository.findAllEmitters(any()))
-                    .willReturn(emitters);
+            doNothing().when(redisMessageService).publish(any(), any());
 
             // when
             // then
-            assertDoesNotThrow(() -> notificationService.sendNotification(
-                    memberKey, message, notificationType, relatedUri));
+            assertDoesNotThrow(() ->
+                    notificationService.handleNotification(notificationEvent));
         }
 
         @Test
@@ -134,8 +110,7 @@ class NotificationServiceTest {
 
             // when
             AuthException exception = assertThrows(AuthException.class,
-                    () -> notificationService.sendNotification(
-                            memberKey, message, notificationType, relatedUri));
+                    () -> notificationService.handleNotification(notificationEvent));
 
             // then
             assertEquals(MEMBER_NOT_FOUND, exception.getErrorCode());
