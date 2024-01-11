@@ -14,7 +14,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -30,15 +29,12 @@ public class NotificationController {
      * SSE 구독
      *
      * @param userDetails 인증 유저
-     * @param lastEventId 마지막 수신 이벤트 아이디
      * @return sseEmitter
      */
     @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> subscribe(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @RequestHeader(value = "Last-Event-ID", required = false) String lastEventId) {
-        return ResponseEntity.ok(
-                notificationService.subscribe(userDetails.getUsername(), lastEventId));
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(notificationService.subscribe(userDetails.getUsername()));
     }
 
     /**
