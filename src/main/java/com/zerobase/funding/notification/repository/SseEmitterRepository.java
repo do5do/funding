@@ -9,18 +9,18 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Repository
 public class SseEmitterRepository {
 
-    private final Map<String, SseEmitter> emitterMap = new ConcurrentHashMap<>();
+    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
-    public SseEmitter save(String key, SseEmitter sseEmitter) {
-        emitterMap.put(key, sseEmitter);
+    public SseEmitter save(String eventId, SseEmitter sseEmitter) {
+        emitters.put(eventId, sseEmitter);
         return sseEmitter;
     }
 
-    public void delete(String key) {
-        emitterMap.remove(key);
+    public Optional<SseEmitter> findById(String memberId) {
+        return Optional.ofNullable(emitters.get(memberId));
     }
 
-    public Optional<SseEmitter> findById(String key) {
-        return Optional.ofNullable(emitterMap.get(key));
+    public void deleteById(String eventId) {
+        emitters.remove(eventId);
     }
 }

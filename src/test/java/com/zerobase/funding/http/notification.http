@@ -1,3 +1,12 @@
 ### sse subscribe
-GET {{host}}/notification/subscribe/1
+GET {{host}}/notification/subscribe
+Authorization: {{token}}
+
+
+### notification redirect
+GET {{host}}/notification/2
+Authorization: {{token}}
+
+### unread notifications
+GET {{host}}/notification
 Authorization: {{token}}
