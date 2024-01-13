@@ -52,6 +52,12 @@ jobs:
           tags: ${{ secrets.DOCKER_REPO }}/funding-app:latest
           cache-from: type=gha
 
+      - name: Make docker .env
+        run: |
+          cd ./docker
+          touch .env
+          echo "${{ secrets.DOCKER_REPO }}" > .env
+
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         env:

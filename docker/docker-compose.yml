@@ -2,7 +2,7 @@ version: '3'
 
 services:
   funding-app:
-    image: ${DOCKER_REPO}/funding-app:${VERSION}
+    image: ${DOCKER_REPO}/funding-app:latest
     container_name: funding-app
     expose:
       - "8080:8080"
