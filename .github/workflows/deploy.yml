@@ -34,7 +34,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew --build-cache clean build
 
-      - name: Setup Docker Buildx # docker에서 제공하는 action
+      - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
 
       - name: Login to Docker hub
