@@ -67,5 +67,5 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            docker-compose -f $DOCKER_COMPOSE down --rmi all
-            docker-compose -f $DOCKER_COMPOSE up -d
+            docker compose -f $DOCKER_COMPOSE down --rmi all
+            docker compose -f $DOCKER_COMPOSE up -d
