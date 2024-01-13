@@ -52,7 +52,7 @@ jobs:
           cache-from: type=gha
 
       - name: Deploy to EC2
-        uses: appleboy/ssh-action@v0.1.8
+        uses: appleboy/ssh-action@master
         env:
           DOCKER_COMPOSE: "./docker/docker-compose.yml"
         with:
