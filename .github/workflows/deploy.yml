@@ -23,12 +23,12 @@ jobs:
       - name: Make secret properties
         run: |
           cd ./src/main/resources
-          touch ./application-prod.yml
-          echo "${{ secrets.PROD }}" > ./application-prod.yml
+          touch ./application-prod.properties
+          echo "${{ secrets.PROD }}" > ./application-prod.properties
           touch ./application-cloud.yml
-          echo "${{ secrets.CLOUD }}" > ./application-cloud.yml
+          echo "${{ secrets.CLOUD }}" > ./application-cloud.properties
           touch ./application-oauth.yml
-          echo "${{ secrets.OAUTH }}" > ./application-oauth.yml
+          echo "${{ secrets.OAUTH }}" > ./application-oauth.properties
         shell: bash
 
       - name: Build with Gradle
