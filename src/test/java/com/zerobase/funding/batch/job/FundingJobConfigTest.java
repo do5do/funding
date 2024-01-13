@@ -98,6 +98,7 @@ class FundingJobConfigTest {
         List<PaymentHistory> paymentHistoryList = failFundings.stream()
                 .map(o -> paymentHistoryRepository.findByFunding(o).get()).toList();
 
+        Thread.sleep(300);
         List<Notification> notifications = notificationRepository.findAll();
 
         // 상태 검증

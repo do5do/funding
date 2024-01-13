@@ -37,7 +37,8 @@ out/
 .vscode/
 
 src/main/resources/application-oauth.yml
-src/main/resources/application-key.yml
 src/main/resources/application-cloud.yml
+src/main/resources/application-prod.yml
 /src/test/java/com/zerobase/funding/http/http-client.private.env.json
 /src/main/generated/
+docker/.env
