@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  funding-app:
+    image: ${DOCKER_REPO}/funding-app:${VERSION}
+    container_name: funding-app
+    expose:
+      - "8080:8080"
+    networks:
+      - funding
+    depends_on:
+      - funding-redis
+
+  funding-redis:
+    image: redis:latest
+    container_name: funding-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - funding
+
+  funding-nginx:
+    image: nginx:latest
+    container_name: funding-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - funding
+    depends_on:
+      - funding-app
+
+networks:
+  funding:
+    driver: bridge

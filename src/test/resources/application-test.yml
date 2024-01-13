@@ -1,9 +1,11 @@
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
+    hikari:
+      maximum-pool-size: 20
 
   jpa:
     database: h2
@@ -31,3 +33,16 @@ spring:
       enabled: true
     jdbc:
       initialize-schema: always
+
+jwt:
+  key: c3ByaW5nLWJvb3QtYXBpLWp3dC1zZWNyZXQta2V5LXN1cGVyLXNlY3JldC15ZXMteWVzLXllcy0yNAo=
+
+scheduler:
+  api:
+    funding-product:
+      views: "0 0 0 * * *"
+  batch:
+    funding: "0 0 1 * * *"
+
+sse:
+  timeout: 60000
