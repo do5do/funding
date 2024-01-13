@@ -46,7 +46,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: ./docker/app
+          context: .
+          file: ./docker/app/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_REPO }}/funding-app:latest
           cache-from: type=gha
