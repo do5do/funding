@@ -74,8 +74,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
-          source: "docker/docker-compose.yml, docker/.env"
-          target: "~/deploy"
+          source: "docker/docker-compose.yml,docker/.env"
+          target: "~/"
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
@@ -84,5 +84,6 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            docker-compose -f ~/deploy/docker-compose.yml down --rmi all
-            docker-compose -f ~/deploy/docker-compose.yml up -d
+            cd ~/docker
+            docker-compose down --rmi all
+            docker-compose up -d
