@@ -5,7 +5,7 @@ services:
     image: ${DOCKER_REPO}/funding-app:latest
     container_name: funding-app
     expose:
-      - "8080:8080"
+      - "8080"
     networks:
       - funding
     depends_on:
