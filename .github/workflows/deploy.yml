@@ -68,6 +68,15 @@ jobs:
           touch .env
           echo "${{ secrets.DOCKER_REPO }}" > .env
 
+      - name: Copy files to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          source: "./docker/docker-compose.yml, ./docker/.env"
+          target: "~/deploy/docker-compose.yml, ~/deploy/.env"
+
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -75,5 +84,5 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            docker-compose -f docker/docker-compose.yml down --rmi all
-            docker-compose -f docker/docker-compose.ymlE up -d
+            docker-compose -f ~/deploy/docker-compose.yml down --rmi all
+            docker-compose -f ~/deploy/docker-compose.yml up -d
