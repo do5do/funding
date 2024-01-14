@@ -8,8 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      APP: ${{ secrets.DOCKER_REPO }}/funding-app:latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3

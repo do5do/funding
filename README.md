@@ -47,6 +47,9 @@
 ## ERD
 ![erd](doc/img/funding_erd.png)
 
+## Server Architecture
+![architecture](doc/img/server_architecture.drawio.png)
+
 ## Troubleshooting
 [go to the troubleshooting section](doc/trouble_shooting.md)
 
