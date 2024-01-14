@@ -70,12 +70,10 @@ jobs:
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
-        env:
-          DOCKER_COMPOSE: "./docker/docker-compose.yml"
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            docker-compose -f $DOCKER_COMPOSE down --rmi all
-            docker-compose -f $DOCKER_COMPOSE up -d
+            docker-compose -f ./docker/docker-compose.yml down --rmi all
+            docker-compose -f ./docker/docker-compose.ymlE up -d
