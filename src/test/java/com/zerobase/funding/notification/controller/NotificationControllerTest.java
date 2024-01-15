@@ -1,6 +1,7 @@
 package com.zerobase.funding.notification.controller;
 
 import static com.zerobase.funding.domain.notification.entity.NotificationType.FUNDING_ENDED;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -13,6 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerobase.funding.api.auth.jwt.TokenProvider;
 import com.zerobase.funding.notification.dto.NotificationDto;
+import com.zerobase.funding.notification.exception.NotificationException;
 import com.zerobase.funding.notification.service.NotificationService;
 import java.net.URI;
 import java.util.List;
@@ -83,6 +85,22 @@ class NotificationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("id:" + id + "\n" +
                         "data:" + objectMapper.writeValueAsString(notificationDto) + "\n\n"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("SSE 구독하기 실패 - 첫 연결에는 토큰 인증이 필요하다.")
+    void subscribe_no_authentication() throws Exception {
+        // given
+        given(notificationService.subscribe(any()))
+                .willReturn(new SseEmitter());
+
+        // when
+        // then
+        mockMvc.perform(get(uri + "/subscribe"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(o ->
+                        assertTrue(o.getResolvedException() instanceof NotificationException))
                 .andDo(print());
     }
 

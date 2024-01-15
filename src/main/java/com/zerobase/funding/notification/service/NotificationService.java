@@ -25,8 +25,8 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Service
 public class NotificationService {
 
-    private final AuthenticationService authenticationService;
     private final NotificationRepository notificationRepository;
+    private final AuthenticationService authenticationService;
     private final SseEmitterService sseEmitterService;
     private final RedisMessageService redisMessageService;
 

@@ -48,7 +48,8 @@ public class SecurityConfig {
                                         new AntPathRequestMatcher("/error"),
                                         new AntPathRequestMatcher("/favicon.ico"),
                                         new AntPathRequestMatcher("/auth/success"),
-                                        new AntPathRequestMatcher("/funding-products/**", "GET")
+                                        new AntPathRequestMatcher("/funding-products/**", "GET"),
+                                        new AntPathRequestMatcher("/notification/subscribe")
                                 ).permitAll()
                                 .anyRequest().authenticated()
                 )
