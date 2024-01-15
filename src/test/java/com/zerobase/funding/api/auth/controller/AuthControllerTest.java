@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.zerobase.funding.api.auth.jwt.TokenProvider;
 import com.zerobase.funding.api.auth.service.TokenService;
+import com.zerobase.funding.notification.service.RedisMessageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,9 @@ class AuthControllerTest {
 
     @MockBean
     TokenService tokenService;
+
+    @MockBean
+    RedisMessageService redisMessageService;
 
     @MockBean
     TokenProvider tokenProvider;
@@ -47,6 +51,8 @@ class AuthControllerTest {
     void logout() throws Exception {
         // given
         doNothing().when(tokenService).deleteRefreshToken(any());
+
+        doNothing().when(redisMessageService).removeSubscribe(any());
 
         // when
         // then
