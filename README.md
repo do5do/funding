@@ -59,6 +59,7 @@
 - Spring Security
 - Spring Batch
 - Spring data JPA
+- Querydsl
 - MySQL database
 - Redis
 - AWS S3
