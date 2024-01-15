@@ -57,11 +57,6 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	testRuntimeOnly 'com.h2database:h2'
 
-	// embedded redis
-	implementation('it.ozimov:embedded-redis:0.7.3') {
-		exclude group: "org.slf4j", module: "slf4j-simple"
-	}
-
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'

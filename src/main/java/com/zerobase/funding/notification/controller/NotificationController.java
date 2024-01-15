@@ -1,7 +1,10 @@
 package com.zerobase.funding.notification.controller;
 
+import static com.zerobase.funding.api.exception.ErrorCode.INVALID_REQUEST;
+
 import com.zerobase.funding.api.auth.annotaion.RoleUser;
 import com.zerobase.funding.notification.dto.NotificationDto;
+import com.zerobase.funding.notification.exception.NotificationException;
 import com.zerobase.funding.notification.service.NotificationService;
 import java.net.URI;
 import java.util.List;
@@ -12,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +38,9 @@ public class NotificationController {
     @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> subscribe(
             @AuthenticationPrincipal UserDetails userDetails) {
+        if (ObjectUtils.isEmpty(userDetails)) {
+            throw new NotificationException(INVALID_REQUEST, "첫 연결에는 인증이 필요합니다.");
+        }
         return ResponseEntity.ok(notificationService.subscribe(userDetails.getUsername()));
     }
 
