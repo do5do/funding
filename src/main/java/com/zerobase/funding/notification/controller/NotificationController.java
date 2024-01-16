@@ -39,7 +39,7 @@ public class NotificationController {
     public ResponseEntity<SseEmitter> subscribe(
             @AuthenticationPrincipal UserDetails userDetails) {
         if (ObjectUtils.isEmpty(userDetails)) {
-            throw new NotificationException(INVALID_REQUEST, "첫 연결에는 인증이 필요합니다.");
+            throw new NotificationException(INVALID_REQUEST, "연결 시 인증이 필요합니다.");
         }
         return ResponseEntity.ok(notificationService.subscribe(userDetails.getUsername()));
     }
