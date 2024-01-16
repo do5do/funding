@@ -58,7 +58,7 @@
 - Spring Boot 3.1.6
 - Spring Security
 - Spring Batch
-- Spring data JPA
+- Spring Data JPA
 - Querydsl
 - MySQL database
 - Redis
