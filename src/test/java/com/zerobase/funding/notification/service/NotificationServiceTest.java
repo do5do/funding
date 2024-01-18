@@ -71,7 +71,7 @@ class NotificationServiceTest {
 
     @Nested
     @DisplayName("알림 이벤트 메서드")
-    class handleNotificationMethod {
+    class SendNotificationMethod {
 
         String message = "message";
         NotificationType notificationType = FUNDING_ENDED;
@@ -98,11 +98,11 @@ class NotificationServiceTest {
             // when
             // then
             assertDoesNotThrow(() ->
-                    notificationService.handleNotification(notificationEvent));
+                    notificationService.sendNotification(notificationEvent));
         }
 
         @Test
-        @DisplayName("실패 - 회원이 없는 경우 알림을 보낼 수 없다.")
+        @DisplayName("실패 - 없는 회원인 경우 알림을 보낼 수 없다.")
         void sendNotification_member_not_found() {
             // given
             given(authenticationService.getMemberOrThrow(any()))
@@ -110,7 +110,7 @@ class NotificationServiceTest {
 
             // when
             AuthException exception = assertThrows(AuthException.class,
-                    () -> notificationService.handleNotification(notificationEvent));
+                    () -> notificationService.sendNotification(notificationEvent));
 
             // then
             assertEquals(MEMBER_NOT_FOUND, exception.getErrorCode());

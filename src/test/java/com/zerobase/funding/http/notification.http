@@ -1,5 +1,5 @@
 ### sse subscribe
-GET {{host}}/notification/subscribe/d6c62de89f4e4d4faa3e643a743e9311
+GET {{host}}/notification/subscribe
 Authorization: {{token}}
 
 ### notification redirect

@@ -28,11 +28,10 @@ public class SseEmitterService {
         sseEmitterRepository.deleteById(emitterKey);
     }
 
-    public void sendNotification(String emitterKey, NotificationDto notificationDto) {
+    public void sendNotificationToClient(String emitterKey, NotificationDto notificationDto) {
         sseEmitterRepository.findById(emitterKey)
-                .ifPresent(o -> {
-                    send(notificationDto, emitterKey, o);
-                    sseEmitterRepository.deleteById(emitterKey);
+                .ifPresent(emitter -> {
+                    send(notificationDto, emitterKey, emitter);
                 });
     }
 

@@ -14,8 +14,6 @@ import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -45,17 +43,15 @@ public class NotificationService {
         return sseEmitter;
     }
 
-    @Async
-    @EventListener
     @Transactional
-    public void handleNotification(NotificationEvent event) {
+    public void sendNotification(NotificationEvent event) {
         Member member = authenticationService.getMemberOrThrow(event.memberKey());
         Notification notification =
                 Notification.of(event.message(), event.notificationType(), event.relatedUri());
         notification.addMember(member);
+        notificationRepository.save(notification);
 
-        redisMessageService.publish(event.memberKey(),
-                NotificationDto.fromEntity(notificationRepository.save(notification)));
+        redisMessageService.publish(event.memberKey(), NotificationDto.fromEntity(notification));
     }
 
     @Transactional
