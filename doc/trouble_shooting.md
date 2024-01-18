@@ -188,23 +188,27 @@ lock 획득/해제하는 과정과 재고 수량을 감소하는 과정이 하�
 실시간 알림 발송을 위해 Server Sent Event(SSE)를 적용하여 구현하였습니다.
 
 ### 문제
-SSE 연결이 만료될 때 해당 thread가 timeout이 되면서 Access Deny 에러가 발생했습니다. <br>
-`SseEmitter`에서는 스레드를 `Runable`로 생성하여 `run()`을 하는데, 
-이때 스레드 간 인증 객체(`SecurityContext`)를 공유하지 못해서 인증 실패로 빠지게 된다고 판단되었습니다. 
+SSE 연결이 만료될 때 해당 `thread`가 `timeout`이 되면서 `Access Deny` 에러가 발생했습니다.  
+
+`SseEmitter`는 비동기로 HTTP 요청을 처리합니다. 서블릿 스레드(neo-8080-exec-1)가 요청을 받고, 
+다른 스레드(executor-1)에게 작업을 할당하고(send, complete, ...) 해제됩니다. 
+executor-1 스레드가 작업을 끝내면, 다른 서블릿 스레드(neo-8080-exec-2)가 요청을 받고 같은 방식으로 처리됩니다.
+
+이때 요청 받은 스레드와 작업을 할당받은 스레드 간 인증 객체(`SecurityContext`)를 공유하지 못해서 인증 실패로 빠지게 된다고 판단되었습니다. 
 
 ### 해결
-SSE 구독 API는 로그인 직후 클라이언트에서 요청하는 api입니다. 
+SSE 구독 API는 로그인 직후 클라이언트가 요청하는 api입니다. 
 SSE 커넥션 이후 만료 시 마다 계속해서 인증 검증을 할 필요는 없다고 생각됐습니다.
 
 **대안**
-- SSE 구독 API의 permission을 허용합니다.
+- SSE 구독 API를 인증없이 접근 가능하도록 허용합니다.
 - 클라이언트는 구독 요청 시 이전과 같이 헤더에 인증 토큰을 실어 보냅니다.
-- permission을 허용하는 것은 인증 처리가 되지 않아도 허용하겠다는 것이며, 토큰이 있는 상태라면 동일하게 `TokenAuthenticationFilter`의 로직을 타고 인증 객체를 생성할 것 입니다.
+- 인증 처리가 되지 않아도 허용하지만, 토큰이 있는 상태라면 동일하게 `TokenAuthenticationFilter`의 로직을 타고 인증 객체를 생성할 것 입니다.
 - 다만 연결 요청 시 토큰이 없어도 필터에서 예외가 발생하지 않기 때문에 컨트롤러에서 인증 객체에 대한 예외처리를 추가하였습니다.
-- 결론적으로 전과 같이 DB 조회없이 인증 객체에서 유저 정보를 얻어 SSE 구독 처리를 하면서, timeout 되는 쓰레드에서 예외가 발생하지 않도록 변경하였습니다.
+- 결과적으로 전과 같이 DB 조회없이 인증 객체에서 유저 정보를 얻어 SSE 구독 처리를 하면서, timeout 되는 쓰레드에서 예외가 발생하지 않도록 변경하였습니다.
 
 참고 PR([#9](https://github.com/do5do/funding/pull/9#issue-2081190606)) <br>
-[블로그 정리](https://do5do.tistory.com/19)
+[실시간 알림 처리 블로그 정리](https://do5do.tistory.com/19)
 
 ## nginx not found 에러
 ### 배경
