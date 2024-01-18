@@ -203,7 +203,8 @@ SSE 커넥션 이후 만료 시 마다 계속해서 인증 검증을 할 필요�
 - 다만 연결 요청 시 토큰이 없어도 필터에서 예외가 발생하지 않기 때문에 컨트롤러에서 인증 객체에 대한 예외처리를 추가하였습니다.
 - 결론적으로 전과 같이 DB 조회없이 인증 객체에서 유저 정보를 얻어 SSE 구독 처리를 하면서, timeout 되는 쓰레드에서 예외가 발생하지 않도록 변경하였습니다.
 
-참고 PR([#9](https://github.com/do5do/funding/pull/9#issue-2081190606))
+참고 PR([#9](https://github.com/do5do/funding/pull/9#issue-2081190606)) <br>
+[블로그 정리](https://do5do.tistory.com/19)
 
 ## nginx not found 에러
 ### 배경
