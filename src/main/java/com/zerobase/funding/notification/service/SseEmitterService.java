@@ -30,9 +30,7 @@ public class SseEmitterService {
 
     public void sendNotificationToClient(String emitterKey, NotificationDto notificationDto) {
         sseEmitterRepository.findById(emitterKey)
-                .ifPresent(emitter -> {
-                    send(notificationDto, emitterKey, emitter);
-                });
+                .ifPresent(emitter -> send(notificationDto, emitterKey, emitter));
     }
 
     public void send(Object data, String emitterKey, SseEmitter sseEmitter) {
