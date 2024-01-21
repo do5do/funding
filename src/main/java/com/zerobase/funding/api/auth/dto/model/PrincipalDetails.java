@@ -9,14 +9,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public record PrincipalDetails(Member member,
-                               Map<String, Object> attributes,
-                               String attributeKey
-) implements OAuth2User, UserDetails {
+public record PrincipalDetails(
+        Member member,
+        Map<String, Object> attributes,
+        String attributeKey) implements OAuth2User, UserDetails {
 
     @Override
     public String getName() {
-        return attributeKey;
+        return attributes.get(attributeKey).toString();
     }
 
     @Override
