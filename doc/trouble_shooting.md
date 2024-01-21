@@ -26,6 +26,7 @@
 4. 추가로 토큰 상태에 대한 예외처리도 분명해지는 개선이 있었습니다.
 
 참고 PR([#3](https://github.com/do5do/funding/pull/3#issue-2057987361))
+[Spring Security + OAuth2 관련 블로그 정리](https://do5do.tistory.com/20)
 
 ## 펀딩 상품 목록 조회 시 N+1 문제
 ### 배경
