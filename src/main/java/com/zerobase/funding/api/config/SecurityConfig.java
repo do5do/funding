@@ -33,8 +33,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring()
-                .requestMatchers("/error")
-                .requestMatchers("/favicon.ico");
+                .requestMatchers("/error", "/favicon.ico");
     }
 
     @Bean
