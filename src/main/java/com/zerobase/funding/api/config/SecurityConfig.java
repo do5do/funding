@@ -2,6 +2,7 @@ package com.zerobase.funding.api.config;
 
 import com.zerobase.funding.api.auth.handler.CustomAccessDeniedHandler;
 import com.zerobase.funding.api.auth.handler.CustomAuthenticationEntryPoint;
+import com.zerobase.funding.api.auth.handler.OAuth2FailureHandler;
 import com.zerobase.funding.api.auth.handler.OAuth2SuccessHandler;
 import com.zerobase.funding.api.auth.jwt.TokenAuthenticationFilter;
 import com.zerobase.funding.api.auth.jwt.TokenExceptionFilter;
@@ -62,6 +63,7 @@ public class SecurityConfig {
                 .oauth2Login(oauth ->
                         oauth.userInfoEndpoint(c -> c.userService(oAuth2UserService))
                                 .successHandler(oAuth2SuccessHandler)
+                                .failureHandler(new OAuth2FailureHandler())
                 )
 
                 .addFilterBefore(tokenAuthenticationFilter,
