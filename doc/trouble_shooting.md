@@ -25,7 +25,7 @@
 3. 이렇게 되면 `refreshToken`에 대한 key가 유일해지기 때문에 직전에 발급한 `accessToken`이 아니면 재발급 할 수 없게 됩니다.
 4. 추가로 토큰 상태에 대한 예외처리도 분명해지는 개선이 있었습니다.
 
-참고 PR([#3](https://github.com/do5do/funding/pull/3#issue-2057987361))
+참고 PR([#3](https://github.com/do5do/funding/pull/3#issue-2057987361))  
 [Spring Security + OAuth2 관련 블로그 정리](https://do5do.tistory.com/20)
 
 ## 펀딩 상품 목록 조회 시 N+1 문제
@@ -130,6 +130,8 @@ lock 획득/해제하는 과정과 재고 수량을 감소하는 과정이 하�
 
 - 트랜잭션을 새로 열면서 기존보다 커넥션이 하나 더 필요하게 되었고, 이로인해 커넥션이 말라버려서 최종 실패로 이어지게 되는 것을 로그를 통해 확인
 - hikari의 기본 풀 사이즈는 10개 -> 풀 사이즈를 늘려서 테스트 시도 시 성공
+
+### 회고
 - 풀 사이즈를 가용되는 서버의 리소스에 맞게 할당하는 작업이 중요할 것 같다.
 
 참고 PR([#5](https://github.com/do5do/funding/pull/5#issue-2062334669))
